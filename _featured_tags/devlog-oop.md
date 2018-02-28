@@ -1,8 +1,8 @@
 ---
 layout: tag-blog
-title: Algorithm
-slug: algorithm
+title: OOP
+slug: oop
 category: devlog
 menu: false
-order: 3
+order: 6
 ---

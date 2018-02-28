@@ -3,6 +3,6 @@ layout: tag-blog
 title: Data Structure
 slug: data
 category: devlog
-menu: true
+menu: false
 order: 2
 ---
