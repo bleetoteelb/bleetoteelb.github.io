@@ -6,6 +6,7 @@ categories: devlog
 tags: oop
 ---
 
+# 1. 문제 
 
 ## 설명
 
@@ -52,7 +53,7 @@ Toeic
 10 2
 ```
 
-## 해결전략
+# 해결전략
 
 이 문제를 처음 받았을 때 보통 가장 먼저 드는 생각은
 행렬의 각 요소를 돌면서 8방향 탐색을 하는 방법일 것이다.
@@ -90,40 +91,7 @@ ghijklm
 4 x 7 grid이다.
 
 이를 방향에 맞게 돌려보면 다음과 같은 grid들이 나온다
-```
-2. 
-acef
-bdfh
-cegi
-dfhj
-egik
-fhjl
-gikm
-
-3.
-a
-bc
-cde
-defg
-efgh
-fghi
-ghij
-ijk
-kl
-m
-
-4.
-g
-fi
-ehk
-dgjm
-cfil
-behk
-adgj
-cfi
-eh
-g
-```
+![all]("/img/all.jpg")
 
 ## Tip
 
