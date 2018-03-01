@@ -235,7 +235,7 @@ find함수는 a의 위치를 반환할 것이다.
 
 ### 결과 확인
 
-![i_color](https://bleetoteelb.github.io/assets/img/test_result.JPG)
+![test_result](https://bleetoteelb.github.io/assets/img/test_result.JPG)
 
 
 ###### 소스는 공개하지 않습니다.
@@ -245,7 +245,8 @@ find함수는 a의 위치를 반환할 것이다.
 1. 대소문자가 상관없으니 처음에 전부 대문자 혹은 전부 소문자로 미리 바꾸면 편하다.
 2. 계산식이 이해가 되지 않는다면 직접 그려서 확인해보기를 추천한다.
 3. 회전된 grid의 0열의 좌표를 먼저 확인하고 j가 커질때마다 기존 grid에서 어디로 이동하는지 확인하면 좀 더 쉽다.
-4. string을 뒤집는 함수는 reverse()를 쓰면 된다. 헤더로 algorithm을 추가해주자.
+4. string을 뒤집는 함수는 reverse()를 쓰면 된다. 헤더로 algorithm을 추가해주자.  
+
 ```{.cpp}
 #include <iostream>
 #include <algorithm>
@@ -263,7 +264,8 @@ int main(){
 
 ```
 
-그 결과
+그 결과  
+
 ```
 Original word is korea
 Reversed word is aerok
@@ -277,6 +279,7 @@ Reversed word is aerok
 
 ##### 예제1
 ---
+
 ```
 1
 
@@ -306,6 +309,7 @@ Dagbert
 
 ##### 예제2
 ---
+
 ```
 1
 
@@ -341,6 +345,7 @@ Gogi
 
 ##### 예제3
 ---
+
 ```
 1
 
