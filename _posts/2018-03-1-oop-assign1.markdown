@@ -91,7 +91,7 @@ ghijklm
 4 x 7 grid이다.
 
 이를 방향에 맞게 돌려보면 다음과 같은 grid들이 나온다
-![all]("/img/all.JPG")
+![all](/img/all.JPG)
 
 ## Tip
 
