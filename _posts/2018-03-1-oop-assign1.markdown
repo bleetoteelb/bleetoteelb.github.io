@@ -78,6 +78,12 @@ Toeic
 이를 위해 반복문을 겹겹히 써도 되고,  
 자신이 있다면 recursive로 구현해도 된다.  
 
+다만 이 방법은 단어의 철자를 확인하는 과정이 까다롭다.  
+if문을 통해 여러가지 예외처리를 해주어야 한다.  
+
+다음 진행해야 할 방향에 더 이상 철자가 없을때(가장자리 일때)와 같은 예외들이다.  
+
+구현할 때 꽤나 골치를 썩인 기억이 있다.
 
 
 ## 2-2. Grid 회전
@@ -341,7 +347,7 @@ CDgoQerFuucipeg
 CiBgcxQQQQQsdlr
 qyuhJhgffghrrtw
 cuYtyioFGHeaads
-5
+6
 QQQQQs
 goOGle
 QueeN
@@ -358,6 +364,7 @@ Gogi
 8 11
 2 15
 1 5
+5 5
 ```
 
 ##### 예제3
