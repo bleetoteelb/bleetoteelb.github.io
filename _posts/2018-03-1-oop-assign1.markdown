@@ -407,5 +407,46 @@ Jing
 20 6
 6 2
 1 9
-18 7
+20 7
 ```
+
+##### 예제3
+---
+
+```
+1
+
+20 10
+werydSFhku
+DesfgidSKe
+XCWajDSWwP
+CVbuDasdae
+cASgaserer
+sbdaGerwnq
+CDuAGsergy
+dfskFvcbgh
+erStbryuwt
+Qwtqwusfad
+eruyiekEli
+tyiggyubii
+WPAWOEJaus
+aERYJOwetk
+ueYwqEYwRt
+TgOyuhjmgh
+cSghsdcieg
+wqenDFfynp
+retUarhist
+rtolgejZsp
+2
+Heyhe
+suji
+```
+
+결과
+
+```
+16 10
+5 3
+```
+
+
