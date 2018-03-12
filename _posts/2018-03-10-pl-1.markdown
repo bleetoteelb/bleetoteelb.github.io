@@ -1,0 +1,198 @@
+---
+layout: post
+title:  "Programming Language 기초"
+subtitle:   "Programming Language 기초"
+categories: pl
+tags: pl
+---
+
+# 1. Functional Programming
+
+언어에는 **함수형 프로그래밍**과 **명령형 프로그래밍**이 있다.   
+명령형 픅로그래밍에서는 상태를 바꾸는 것을 강조하는 것과는 달리,  
+함수형 프로그래밍은 함수의 응용을 강조한다.  
+
+**함수형 프로그래밍**(줄여서 FP)는 **순수함수(pure function)**를 조합하고  
+**공유상태(shared state)**, **변경 가능한 데이터(mutable data)** 및 **부작용(side-effects)**을 피하여 소프트웨어를 만드는 프로세스이다.  
+
+즉, 함수형 프로그래밍의 특징을 알기 위해서는 **순수함수**가 무엇인지 먼저 알아야 한다.  
+
+순수함수를 만든다는 것은,  
+부수효과(side effects)를 없애는것이다.  
+다시 말해, 순수함수란  
+1. 들어오는 인자가 같으명 항상 동일한 결과를 return하는 함수,  
+2. 함수가 받은 인자 외에 다른 외부의 상태에 영향을 끼치지 않는 함수,
+3. return값 외에는 외부와 소통하는 것이 없는 함수이다.
+
+이렇게 만들어진 순수함수를 조합하면,  
+모듈화 수준을 높일 수 있고,  
+그 말은 오류가 적고 안정성이 높아서 생산성이 높아진다는 뜻이다.  
+
+다음 예를 보면서 순수함수가 무엇인지 알아보자.
+
+#### 항상 동일한 결과 return
+```
+function add(a,b){
+	return a+b;
+}
+```
+
+위 add함수에서는 동일한 인자를 주면 항상 동일한 결과를 return한다.  
+외부의 상태에 영향을 미치거나 외부의 상테에 영향을 받는일이 절대 없다.  
+즉, side effect가 없다.  
+그러므로 **순수 함수**이다.
+
+#### 외부의 상테에 영향을 받음
+```
+var c=10;
+function add2(a,b){
+	return a+b+c;
+}
+```
+위 add2함수에서는 c가 계속 변할 수 있다.
+*add(2,3)*을 실행한 후에 c의 값을 15로 변화시킨 후  
+*add(2,3)*을 실행시키면 각 실행은 다른 return값을 반환할 것이다.
+
+
+c가 상수가 아니라면 위 함수는 **순수함수가 아니다**.
+
+#### 외부의 상테에 영향을 줌
+```
+var c=10;
+function add3(a,b){
+	c=b;
+	return a+b;
+}
+```
+위 add3함수에서는 인자로 a,b가 들어왔지만,  
+인자로 들어오지 않고 함수 내부에서 정의되지도 않은 외부의 c 상태를 변화시켰다.  
+return 값으로 소통하는 것 외에 외부의 상테에 변화를 일으키는 부수효과가 발생했다.  
+그러므로 이 함수도 **순수함수가 아니다.**
+
+
+#### 들어오는 인자를 변경하는 함수
+```
+var obj1 = {val:10};
+function add4(obj,b){
+	obj.val +=b;
+}
+```
+위 함수는 return으로 소통하지 않고 들어오는 인자를 직접 변경하였다.
+함수의 인자로 들어왔을지라도, 그 인자를 직접 변경하면 안된다.  
+
+직접 변경하는게 아니라 인자를 함수 내에서 복사해서 변경한 값을 return해야 한다.  
+다음 함수를 보자.  
+```
+var obj1={val:10};
+function add5(obj,b){
+	return {val:obj.val+b}
+}
+```
+add4함수는 **순수함수가 아니고**,  
+add5함수는 **순수합수**이다.
+
+언제 실행해도 항상 동일한 값을 return하기 때문에 순수함수는 평가시점이 중요하지 않다. 
+순수함수가 아니면 외부의 환경에 따라 다른값을 return 할 수 있다!
+
+### 순수 함수의 이점
+1. 가독성과 유지 관리 편의성 향상.  
+이는 각 함수가 인수가 제공되는 경우 특정 태스크를 완료하도록 디자인되었기 때문이다. 
+2. 함수는 외부 상태에 의존하지 않는다.
+3. 반복되는 개발이 쉬워진다. 
+코드를 리팩터링하기가 쉬워서 디자인 변경 사항을 구현하기가 더욱 쉽다. 예를 들어, 복잡한 변환을 작성할 때 일부 코드가 변환에서 몇 번 반복되는 경우 순수 메서드를 통해 리팩터링하면 의도하지 않은 결과가 발생할 것에 대해 걱정하지 않고 원하는 대로 순수 메서드를 호출할 수 있다.
+4. 테스트와 디버깅이 더 쉽다. 순수 함수를 분리하여 더 용이하게 테스트할 수 있기 때문에 일반적인 값, 유효한 경계 경우 및 무효한 경계 경우를 사용하여 순수 함수를 호출하는 테스트 코드를 작성할 수 있다.
+5. race condition 상태에서 안정성을 높여준다.
+
+
+
+# 2. Syntax vs Semantic
+
+### 2-1 syntax  
+
+Syntax는 "문법(grammar)"으로 컴파일 과정에서 확인을 한다.  
+```
+x=3(4+1);  // 괄호와 숫자사이에 연산자가 없음
+=7+9<;  // 걍 틀림.
+```
+
+그러나 이 syntax는 특정 언어에만 국한된 것으로,  
+한 쪽에서는 틀렸지만, 한 쪽에서는 맞을 수 있다.  
+```
+x = 3+4 //error in C++ but right in python  
+```
+
+### 2-2 Semantics  
+
+Semantics는 문장 안에서 의미를 담당. 프로그램 실행 단계에서 확인이 된다.  
+잘못된 결과를 내거나 expression에서의 에러가 날 때 semantic error가 된다.  
+```
+int i; i++; // variable i가 아직 초기화 되지 않았음.  
+int a = "hello"; // String과 int는 호환이 안 됨.  
+int[] v = new int[10]; v[10]=100; // Syntax는 맞지만, 10번째 요소를 불러오려는 의도에 맞지 않음. 아마 Segmentation fault.  
+```
+
+문법이 약간 틀려도 의사소통이 되지만, 의미가 틀리면 의사소통이 안 되듯이,  
+다른 사람이 코드를 봤을 때,  
+Syntax가 틀려도 뭘 하려는지 대충 알지만,   
+Semantic이 틀리면 무얼 하려는지 이해할 수 없다고 생각하면 된다고 한다.  
+
+
+### Binding  
+
+Binding은 속성과 개체 또는 연산과 기호를 연관(association)시키는 것이다.  
+때문에 프로그램은 binding의 연속이다.(A program is a sequence of bindings)  
+
+1. Language design time: 함수와 기호를 바인딩한다.  
+2. Language implementation time: 부동소수점에 대한 표현 범위를 바인딩한다.  
+3. Compile time: 변수와 변수 타입을 연결한다.  
+△ 프로그램 실행 전 / ▽ 프로그램 실행 후  
+4. Load time: 변수(이름)과 메모리상 실질적 데이터(address or value)를 연결시킨다. 변수의 예로는 전역을 들 수 있다.  
+△ Static binding / ▽ Dynamic binding
+5. Run time: 전역 변수가 아닌 모든 변수들을 메모리상 실질적 데이터(address or value)를 연결시킨다.  
+
+Segmentation fault가 컴파일 할 때가 아닌,  
+실행 후에 나는 이유도 이 때문이라고 추정.  
+
+```
+int a=3;
+int b=a+a;
+```
+위 코드에서 Type-checking과 Evaluate expression을 분리해보자.  
+**Type-checking**  
+- a와 3이 같은 타입인지 확인  
+- b와 a+a가 같은 타입인지 확인  
+
+**Evaluate expression**
+- a에 3을 binding  
+- a+a를 계산  
+- a+a를 b에 binding  
+
+
+binding부분은 좀 더 공부해야 하겠지만,  
+이 때, Type-checking은 static, 즉 프로그램 실행전에 발생하고
+evaluation은 dynamic, 즉 프로그램 실행 후에 발생한다.
+
+
+다음 expression들의 type-checking을 해보자.
+
+1. 34 // int type  
+2. true // bool type  
+3. false // bool type  
+4. x // variable type  
+5. e1 + e2 // e1 type + e2 type  
+6. e1 < e2 // bool type  
+7. if e1 then e2 else e3 // e2 or e3 type
+
+
+
+
+### 각 expression binding시 syntax / type-checking / evaluation  
+**Variables**
+1. Syntax: 글자 배열인지, 숫자인지, \_인지, 숫자로 시작하지 않는지 확인
+2. Type-checking: 현재 static environment에서 type을 체크한다. 틀렸으면 fail
+3. 값을 찾음.
+
+**Addition(e1+e2)**
+1. Syntax: e1과 e2가 expression인지 확인
+2. Type-checking: e1과 e2가 int를 갖고 있다면, e1+e2도 int이다.
+3. e1이 v1으로 evaluate되고, e2가 v2로 evaluate되면, e1+e2는 v1과 v2의 합으로 evaluate한다.
