@@ -1,17 +1,32 @@
 ---
 layout: post
-title:  "Algorithm에서 의사코드 규칙"
-subtitle:   "Algorithm에서 의사코드 규칙"
+title:  "Algorithm에서 pseudocode 규칙"
+subtitle:   "Algorithm에서 pseudocode 규칙"
 categories: devlog
 tags: algorithm
 ---
 
-# 의사코드 규칙
+# pseudocode 규칙
 
-아래 내용은 _Introduction to algorithms_ 에 나온 의사코드 규칙을 옮겨 적은 것이다.
+아래 내용은 _Introduction to algorithms_ 에 나온 pseudocode 규칙을 옮겨 적은 것이다.
+
+내용을 설명하는데에 필요한 pseudocode는 다음과 같다.
+```
+Procedure INSERTION-SORT(A)
+1  for j ← 2 to length[A]
+2      do key ← A[j]
+3         ▷ A[j]를 정렬된 수열 A[1..j-1] 속에 삽입하기
+4         i ← j-1
+5         while i>0 and A[i] > key
+6            do A[i+1] ← A[i]
+7               i ← i-1
+8         A[i+1] ← key
+```
+
 
 ### 1. 
 들여쓰기는 블록 구조를 나타낸다. 예를 들어, 1행에서 시작한 for 루프의 바디 부분은 2-8행으로 구성되고, 5행에서 시작한 while 루프는 6-7행은 포함하지만 8행은 포함하지 않는다. 이러한 들여쓰기 스타일은 if-then-else문에도 똑같이 적용된다. begin, end와 같은 전통적인 방법으로 블록 구조를 표현하는 것에 비해 들여쓰기를 할 경우 코드의 지저분함은 줄이면서도 명확함을 유지하거나 오히려 향상시킬 수 있다.  
+
 
 -
 
