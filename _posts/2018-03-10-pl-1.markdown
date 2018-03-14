@@ -2,7 +2,7 @@
 layout: post
 title:  "Programming Language 기초"
 subtitle:   "Programming Language 기초"
-categories: pl
+categories: devlog
 tags: pl
 ---
 
