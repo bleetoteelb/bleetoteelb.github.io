@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Programming Language 기초"
-subtitle:   "Programming Language 기초"
+title:  "Algorithm에서 의사코드 규칙"
+subtitle:   "Algorithm에서 의사코드 규칙"
 categories: devlog
 tags: algorithm
 ---
