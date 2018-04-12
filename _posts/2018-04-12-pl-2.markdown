@@ -160,20 +160,20 @@ e1은 t1타입, ... ,en은 tn타입이고, 함수 e0는 t타입이다.
 
 ## 2-1 Pairs  
 **Tuples**중에 2개로 쌍을 이루는 **2-tuples**을 특별히 **pairs**라고 한다.  
->**1. Syntax** : *(e1,e2) *  
+>**1. Syntax** : _(e1,e2)_  
 
->**2. Evaluation** : _e1_을 _v1_에, _e2_를 _v2_에 evaluate하고 그 결과는 _(v1,v2)_이다.  
-               **pair**의 value 역시 value이다.
+>**2. Evaluation** : _e1_ 을 _v1_ 에, _e2_ 를 _v2_ 에 evaluate하고 그 결과는 _(v1,v2)_ 이다.  
+               **pair**의 value 역시 value이다. 
 
 
->**3. Type-checking** : _e1_은 _ta_ 타입을 갖고, _e2_가 _tb_ 타입을 갖는다면, 위 **pair**의 type은 _ta\*tb_라고 표현한다.  
+>**3. Type-checking** : _e1_ 은 _ta_ 타입을 갖고, _e2_ 가 _tb_ 타입을 갖는다면, 위 **pair**의 type은 _ta\*tb_ 라고 표현한다.  
 .
 
 pairs(혹은 tuples)에 접근하기  
 
 >**1. Syntax** : _#1 e_ and _#2 e_  
 >**2. Evaluation** : value쌍에 _e_를 evaluate하고 첫번째 혹은 두번째 요소를 반환한다.  
->**3. Type-checking** : _e_가 _ta\*tb_ 타입을 갖고있다면, _#1 e_ 와 _#2 e_ 는 순서대로 _ta_과 _tb_를 갖게된다.  
+>**3. Type-checking** : _e_ 가 _ta\*tb_ 타입을 갖고있다면, _#1 e_ 와 _#2 e_ 는 순서대로 _ta_ 과 _tb_ 를 갖게된다.  
 
 **pair** 활용에 대한 예시는 다음과 같다. 
 ```haskell
@@ -216,11 +216,11 @@ val a5 = (5,6) : int * int
 **Tuples**는 **pairs**보다 개수가 많을뿐 그 외에는 모두 같다.  
 
 >1. Syntax: (e1,e2, ... ,en)  
->2. Type: ta*tb* ... *tn  
+>2. Type: ta\*tb\* ... \*tn  
 >3. Access: #1 e, #2 e, #3 e, ...  
 
 
-**Tuples** 역시 value이므로 **tuples**의 요소로 **tuples**를 가질 수 있다. **(Nesting)  **
+**Tuples** 역시 value이므로 **tuples**의 요소로 **tuples**를 가질 수 있다. **(Nesting)**
 ```haskell
 val x1 = (7,(true,9)) 
 (* int*(bool*int) *)  
@@ -231,6 +231,7 @@ val x3 = (#2 x1)
 val x4 = ((3,5),((4,8),(0,0)))
 (* (int*int)*((int*int)*(int*int)) *)  
 ```
+
 .
 
 .
@@ -300,7 +301,7 @@ tl : 'a list -> 'a list
 단, 여기서 헷갈리지 말아야 할 것은 좌변의 'a list가 empty list를 뜻하지는 않는다.  
 단지 임의의 type이라는 뜻이다.  
 **null** [] 은 true를 반환하지만,  
-**hd **[], **tl ** [] 를 쓰면 오류가 난다.  
+**hd **[], **tl** [] 를 쓰면 오류가 난다.  
 .
 
 .

@@ -8,16 +8,16 @@ tags: pl
 
 # 1. First-class functions(일급 객체 함수) 
 
-다음과 같은 조건을 만족할 때 __일급 객체__라고 말할 수 있다.  
-- __변수__나 __데이터 구조__안에 담을 수 있다.  
-- __파라미터__로 전달 할 수 있다.  
-- __반환값(return value)__으로 사용할 수 있다.  
-- 할당에 사용된 이름과 관계없이 __고유한 구별__이 가능하다.  
+다음과 같은 조건을 만족할 때 **일급 객체**라고 말할 수 있다.  
+- **변수**나 **데이터 구조**안에 담을 수 있다.  
+- **파라미터__로 전달 할 수 있다.  
+- **반환값(return value)**으로 사용할 수 있다.  
+- 할당에 사용된 이름과 관계없이 **고유한 구별**이 가능하다.  
 
   
 
 쉽게말해,  
-__First-class function__은 어디에서나 value로 사용될 수 있는 함수를 말한다.   
+**First-class function**은 어디에서나 value로 사용될 수 있는 함수를 말한다.   
 다음 예제를 보자.
 
 ```haskell
@@ -167,7 +167,7 @@ val x5 = "xxxxx" : string
 ```
 
 이 때 *n_times*의 **Type**에 주목하자.  
-**_('a → 'a) \* int \* 'a → 'a _  **
+** _ ('a → 'a) \* int \* 'a → 'a _  **
 
 이 함수가 **polymorphic**인지 아닌지는 type을 분석해보면 알 수 있다.  
 이 **polymorphic**의 성질이 *n_times*를 훨씬 유용하고 강력하게 만들어 줄것이다.  
@@ -259,8 +259,8 @@ fn y => 3*y
 ```
 이렇게 간결해졌다. 
 
-그렇다고 인자로 fun trip y = 3*y의 형태로 넘길수는 없다.  
-위 표현은 function binding이기 때문이다. 
+그렇다고 인자로 fun trip y = 3\*y의 형태로 넘길수는 없다.  
+위 표현은 function binding이기 때문이다.  
 
 **Anonymous function**에서는 
 함수 이름은 쓰지 않고 argument만 나열하며,  
@@ -307,7 +307,7 @@ fun map (f,xs) =
 val map : ('a->'b) * 'a list -> 'b list 
 ```
 
-- **Filter **
+- **Filter**
 
 ```haskell
 fun filter (f,xs) = 
