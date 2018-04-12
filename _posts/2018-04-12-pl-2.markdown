@@ -1,0 +1,372 @@
+---
+layout: post
+title:  "Programming Language 2"
+subtitle:   "Programming Language 2"
+categories: devlog
+tags: pl
+---
+
+Functions, Pairs, Lists   
+
+# 1. Functions   
+
+**Function**은 프로그래밍에 있어서 가장 중요한 **building block**중 하나이다.   
+
+함수 실행에 있어 input으로 들어가는 argument와   
+실행 후 결과로 반환되는 result가 있다.   
+
+sml에서는 다른 언어들과는 다르게 class나 this, return과 같은 용어는 존재하지 않는다.   
+.  
+
+**Function**을 정의하게 되면, 컴파일러는 **"Function binding"**을 하게된다.   
+
+다음과 같은 함수가 있다고 해보자   
+```haskell
+fun pow (x:int, y:int) =   
+    if y=0   
+    then 1   
+    else x * pow(x,y-1)   
+```
+
+*pow* 함수는 binding이 되고   
+이때 함수의 body는 재귀형 함수인 *pow(x,y-1)*를 포함한다.   
+
+```haskell
+fun pow(x:int,y:int) =   
+    if y=0   
+    then 1   
+    else x*pow(x,y-1)   
+
+fun cube (x:int) =   
+    pow (x,3)   
+
+val sixtyfour = cube 4   
+val fortytwo = pow(2,2+2) + pow(4,2) + cube(2) + 2   
+```
+
+처음에 *pow*라는 함수가 binding되었다.   
+그 다음 *cube*라는 함수가 binding 되었고, 그 body는 pow(x,3)를 포함한다.   
+*sixtyfour*라는 variable을 *cube 4*의 결과값 (64) 으로 binding했다.   
+*fortytow*라는 variable을 pow(2,4) + pow(4,2) + cube(2) +2의 결과값 (42)으로 binding했다.   
+각 함수호출의 결과값은 처음부터 차례로 16, 16, 8 이다.   
+
+실행해보면 다음과 같은 결과를 얻을 수 있다.   
+```haskell
+val pow = fn : int * int -> int   
+val cube = fn : int -> int   
+val sixtyfour = 64 : int   
+val fortytwo = 42 : int   
+```
+.
+
+.
+
+
+
+
+---
+
+이쯤 짚고 넘어가야할 ML Programming의 특징 4가지   
+
+>**1.** Function-argument syntax를 지키지 않으면 당연하게도 오류 메세지가 뜰것이다.    
+
+>**2.** ml 에서 type syntax에서 여러가지 type의 혼합은 \*을 통해 표현한다.(이때는 곱하기의 뜻이 아니다)   
+예> (3,3) 의 타입  : int \* int (괄호로 묶이는 type은 아래에서 다시 언급할 것이다.)  
+
+>**3.** 다른 언어들과 마찬가지로 이전에 binding 되지 않은 함수는 사용할 수 없다.   
+fun a → fun b 순서로 정의가 되었다면, a함수에서 b함수를 사용할수없다. 그 반대는 가능하다.   
+
+>**4.** ml에도 while loop가 있긴 하지만, loop보다 recursion이 더 강력하기 때문에 지금부터 loop는 사용하지 않을것이다.   
+
+---
+.
+
+.
+
+이전 포스팅에서도 언급했지만 binding에서는 3가지를 확인하게 된다.   
+
+**  1. Syntax **   
+**  2. evaluation   **   
+**  3. type-checking   **   
+
+다음을 보면서 개념을 더 심화시켜보자.   
+.
+
+
+## 1-1 Function binding에서   
+
+**1. Syntax**:  
+```haskell
+fun x0 (x1:t1, ... , xn:tn) = e  
+```
+**2. Evaluation**: 함수 역시 value이다. (No evaluation yet)   
+- *x0*함수를 environment에 추가함으로써 이후에 이 함수를 호출할 수 있도록 한다.   
+- 이 때 함수 호출 역시 재귀를 허용한다.   
+
+**3. Type-checking**:   
+- x0의 type을 _(t1 \* ... \* tn) -> t_로 binding한다.   
+  이 때 t는 임의의 문자로 input과 상관없는 단순한 e의 type이다.   
+- 이후 static environment에는 다음을 포함하게된다.
+    - 이전에 있던 bindings   
+    - x1 : t1, ... , xn:tn (arguments)   
+    - x0 : (t1\*...\*tn)->t (for recursion)   
+
+위의 
+```haskell
+fun x0 (x1:t1, ... , xn:tn) = e   
+```
+를 binding함으로써 새로운 type이 생겼다._((t1\*...\*tn)->t)_  
+
+이 때 함수의 result type은 오른편에 쓰고,  
+전체 type-cheking 결과는 이후 실행에서 x0에 주어질것이다.   
+
+당연하겠지만 이 함수의 arguments인 _x1, x2_ 등은 e안에서만 쓰인다.   
+함수를 정의할 때 type은 생략 할 수 있다.   
+.
+
+
+## 1-2 function call에서   
+
+**1. Syntax**: 
+```haskell
+e0 (e1,...,en)   
+```
+- 만약 argument가 하나라면 괄호는 생략될 수 있다. (e0 e1 으로 쓰일 수 있다->e0함수와 argument e1)   
+
+**2. Type-checking** :   
+- 만약 e0가 (t1*...*tn)->t 타입을 가지고 있다면,   
+e1은 t1타입, ... ,en은 tn타입이고, 함수 e0는 t타입이다.  
+
+**3. Evaluation:  **
+- (현재 dynamic environment에서) 위에서 binding한 *fun x0(...)*함수에 *e0*를 evaluate한다.  
+- (현재 dynamic environment에서) 값 *v1, ..., vn*에 arguemnt를 evaluate한다.  
+- 결과는 *x1 to v1, ... , xn* to *vn*으로의 evaluation을 포함한 환경에서 e의 evaluation 결과이다.  
+
+
+.
+
+.
+
+
+
+# 2. Tuples and lists  
+당신은 지금 **numbers, booleans conditionals, variables, function**등과 같은 value들을 알고있다.  
+이제 이 value를 하나로 묶는 방법을 알아보자.  
+
+-  **Tuples** : 종류가 다를 수 있는 value들을 묶는다.  
+-  **Lists** : 하나의 **list**안에 있는 vlaue type은 반드시 동일해야한다.  
+
+.
+
+## 2-1 Pairs  
+**Tuples**중에 2개로 쌍을 이루는 **2-tuples**을 특별히 **pairs**라고 한다.  
+>**1. Syntax** : *(e1,e2) *  
+
+>**2. Evaluation** : _e1_을 _v1_에, _e2_를 _v2_에 evaluate하고 그 결과는 _(v1,v2)_이다.  
+               **pair**의 value 역시 value이다.
+
+
+>**3. Type-checking** : _e1_은 _ta_ 타입을 갖고, _e2_가 _tb_ 타입을 갖는다면, 위 **pair**의 type은 _ta\*tb_라고 표현한다.  
+.
+
+pairs(혹은 tuples)에 접근하기  
+
+>**1. Syntax** : _#1 e_ and _#2 e_  
+>**2. Evaluation** : value쌍에 _e_를 evaluate하고 첫번째 혹은 두번째 요소를 반환한다.  
+>**3. Type-checking** : _e_가 _ta\*tb_ 타입을 갖고있다면, _#1 e_ 와 _#2 e_ 는 순서대로 _ta_과 _tb_를 갖게된다.  
+
+**pair** 활용에 대한 예시는 다음과 같다. 
+```haskell
+fun swap (pr:int*bool) =  
+    (#2 pr, #1 pr)  
+
+fun sum_two_pairs (pr1:int*int, pr2:int*int) =  
+    ((#1 pr1)+(#1 pr2), (#2 pr1)+(#2 pr2))  
+
+fun div_mod (x: int, y:int) =  
+    (x div y, x mod y)  
+
+fun sort_pair (pr:int*int) =  
+    if (#1 pr) < (#2 pr)  
+    then pr  
+    else (#2 pr, #1 pr)  
+
+val a1 = swap(3,true)  
+val a2 = sum_two_pairs((3,4),(6,7))  
+val a3 = div_mod(10,3)  
+val a4 = sort_pair(5,6)  
+val a5 = sort_pair(6,5)  
+```
+
+결과  
+```haskell
+val swap = fn : int * bool -> bool * int  
+val sum_two_pairs = fn : (int * int) * (int * int) -> int * int  
+val div_mod = fn : int * int -> int * int  
+val sort_pair = fn : int * int -> int * int  
+val a1 = (true,3) : bool * int  
+val a2 = (9,11) : int * int  
+val a3 = (3,1) : int * int  
+val a4 = (5,6) : int * int  
+val a5 = (5,6) : int * int  
+```
+.
+
+## 2-2 Tuples  
+**Tuples**는 **pairs**보다 개수가 많을뿐 그 외에는 모두 같다.  
+
+>1. Syntax: (e1,e2, ... ,en)  
+>2. Type: ta*tb* ... *tn  
+>3. Access: #1 e, #2 e, #3 e, ...  
+
+
+**Tuples** 역시 value이므로 **tuples**의 요소로 **tuples**를 가질 수 있다. **(Nesting)  **
+```haskell
+val x1 = (7,(true,9)) 
+(* int*(bool*int) *)  
+val x2 = #1 (#2 x1) 
+(* x2는 true이므로 타입은 bool이다 *)  
+val x3 = (#2 x1) 
+(* x3는 (true,9)이므로 타입은 (bool*int)이다 *)  
+val x4 = ((3,5),((4,8),(0,0)))
+(* (int*int)*((int*int)*(int*int)) *)  
+```
+.
+
+.
+
+
+## 2-3 Lists  
+**Tuples**는 모든 type을 구분없이 쓸 수 있지만,  
+type-checking을 할 때 모든 요소의 타입을 전부 저장해야 하므로  
+**tuples**의 크기가 커질수록 효율이 떨어진다.  
+
+반면,  
+가질 수 있는 type 종류는 하나지만,  
+type 저장에 유리한 **list**를 사용해보자.  
+
+.
+
+**List**는 다른 언어에서 '배열'과 표현방법이 같다. 
+```haskell
+[v1,v2,v3,...]
+```
+
+[]로 표현되는 __empty list__ 역시 value이다.  
+
+
+그러나 우리가 아는 배열처럼 접근 할 수 없다.  
+__'cons'__라고 불리는 __::__ 로 분리해야만 요소에 접근할 수 있다.  
+ex > 
+```haskell
+[v1,v2,v3,v4] = v1::[v2,v3,v4]  
+```
+- **null e** 는 *e*가 empty list일때 참이다.  
+- *e*가 [v1,v2,v3] 일 때, **hd e** 는 *v1*이다.  
+- *e*가 [v1,v2,v3] 일 때, **tl e** 는 *[v2,v3]*이다.   
+이때 **tl** 은 반드시 **list** 임에 주목하자  
+
+
+**lists** 역시 요소로 다양한 type을 가질 수 있다.  
+다음 예제들을 보면서 type-checking 연습을 해보자.  
+
+```haskell
+val list1 = [3,4,5]  
+val list2 = [[3,4],[5,6],[1,0]]  
+val list3 = [(3,4),(5,6),(1,0)]  
+val list4 = [(true,false),(true,true)]  
+val list5 = [([3,4],[5,6],4),([1,2],[1,2],2)]  
+val list6 = [([(true,false)],([3,4],[5.0,6.0],4))]  
+
+list1 : int list  
+list2 : int list list  
+list3 : (int * int) list  
+list4 : (bool * bool) list  
+list5 : (int list * int list * int) list  
+list6 : ((bool * bool) list * (int list * real list * int)) list  
+```
+
+*[]* 는 empty list이기 때문에 어떤 타입도 담을수 있다.  
+이때 우리는 이것을 *'a list* 라고 한다.   
+정해지지않아 무엇이든 될 수 있는 타입을 'a(alpha) 타입이라고 하며, 'b(beta) 타입으로 쓸 수도 있다.  
+
+*e1::e2* 과 **null, hd, tl** 을 이용한 expression의 type-checking을 해보자,  
+```haskell
+null : 'a list -> bool  
+hd : 'a list -> 'a  
+tl : 'a list -> 'a list  
+```
+
+단, 여기서 헷갈리지 말아야 할 것은 좌변의 'a list가 empty list를 뜻하지는 않는다.  
+단지 임의의 type이라는 뜻이다.  
+**null** [] 은 true를 반환하지만,  
+**hd **[], **tl ** [] 를 쓰면 오류가 난다.  
+.
+
+.
+
+# 3. Recursion  
+
+**list**를 사용하는 function은 주로 **recursion**이다.  
+그 이유는, 다른언어에서의 배열처럼 **list** 중간에 있는 요소에 바로 접근할 수 없기 때문이다.  
+**list**의 모든 요소를 접근하기 위해서는 **hd, tl** 을 이용하여 **recursion**을 사용해야한다.  
+
+마찬가지로, **list**를 생성해야 하는 function역시 주로 **recursion**이다.  
+다음 함수들을 파악하면서 result1~6의 값이 무엇이 될까 생각해보자.   
+
+
+```haskell
+fun sum_list (xs:int list) = 
+    if null xs 
+    then 0 
+    else hd(xs) + sum_list(tl(xs)) 
+
+fun countdown (x:int) = 
+    if x=0 
+    then [] 
+    else x::countdown (x-1) 
+
+fun append (xs:int list, ys:int list) = 
+    if null xs 
+    then ys 
+    else hd (xs)::append(tl(xs),ys) 
+
+fun true_false (xs:(bool*int*int)list) = 
+    if null xs 
+    then 0 
+    else 
+        if #1(hd xs) = true 
+        then #2(hd xs) + true_false(tl xs) 
+        else #3(hd xs) + true_false(tl xs) 
+
+fun firsts (xs:(int*int)list) = 
+    if null xs 
+    then [] 
+    else #1(hd xs)::firsts(tl xs) 
+
+fun seconds (xs:(int*int)list) = 
+    if null xs 
+    then [] 
+    else #2(hd xs)::seconds(tl xs) 
+
+fun sum_pair_list (xs:(int*int)list) = 
+    (sum_list(firsts xs)) + (sum_list(seconds xs)) 
+
+
+val result1 = sum_list([3,1,6,2,5,8,3]) 
+val result2 = countdown(5) 
+val result3 = append([3,1,2,5],[0,6,3,8]) 
+val result4 = true_false([(true,2,9),(false,1,5),(true,9,4),(false,~10,~4)]) 
+val result5 = seconds([(1,2),(4,5),(9,3)]) 
+val result6 = sum_pair_list([(3,2),(6,1),(~1,~2)]) 
+```
+
+정답은 다음과 같다. 
+```haskell
+val result1 = 28 : int 
+val result2 = [5,4,3,2,1] : int list 
+val result3 = [3,1,2,5,0,6,3,8] : int list 
+val result4 = 12 : int 
+val result5 = [2,5,3] : int list 
+val result6 = 9 : int 
+```
