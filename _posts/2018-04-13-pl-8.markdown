@@ -247,3 +247,34 @@ val fold = fn : ('a*'b->'a)*'a*'b list -> 'a
 또한 서로 다른 데이터 처리에 대해 같은 재귀실행을 하기 위해 재사용을 되거나,  
 서로 다른 데이터 구조에 대해 같은 데이터처리를 하기 위해 재사용 되거나, 
 혹은 둘다의 경우를 하도록 도와준다. 
+
+.
+
+
+Iterator에 function을 passing하는 방식은  
+Private data를 처리할 때 유용하다.
+
+먼저 private data를 사용하지 않는 단순한 형태를 보자
+```haskell
+fun f1 xs = fold((fn (x,y) => x+y),0,xs)
+fun f2 xs = fold((fn (x,y) => x andalso y>=0), true, xs)
+```
+
+위 코드들은 처리가 list만을 받아 Iterator을 수행한다.
+
+반면에, 다음 코드들은 list뿐만 아니라,   
+외부의 private data를 처리하는 함수를 인자로 넘길수 있다. 
+```haskell
+fun f3 (xs,hi,lo) =
+    fold((fn(x,y) => x+ (if y>= lo andalso y <= hi then 1 else 0)),0,xs)
+    
+fun f4 (g,xs) = 
+    fold((fn (x,y) => x andalso g y), true, xs)
+```
+
+넘겨진 function은 environment에 있는 어떤 **private data**도 사용할 수 있다.  
+이는 지금까지 설명한 **closure**와 **lexical scope** 덕분이다.  
+
+이 때, Iterator는 environment에 있는 데이터가 무엇인지, 무슨 type인지 알 수 없다.
+
+이런 특성들 때문에 **map, filter, fold**와 같은 iterator들은 훨씬 유용하고 강력해진다.
