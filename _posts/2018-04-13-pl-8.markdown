@@ -1,0 +1,249 @@
+---
+layout: post
+title:  "Programming Language 2"
+subtitle:   "Programming Language 2"
+categories: devlog
+tags: pl
+---
+Lexical scoope and function closure 
+
+# 1. Lexical Scope 
+
+저번에 **Scope**에 대해 잠시 언급한 적이 있었다.  
+변수의 유효범위를 뜻한다고 했는데,  
+변수의 정의 시기와 관련하여 이번엔 좀 더 깊게 이야기해 보려고 한다.  
+
+
+ML에서 **Scope**는 함수를 호출할때가 아닌 선언할 때 생긴다.  
+다음 예제를 보자 
+```haskell
+val name = "hi" 
+fun first() = 
+    name 
+
+fun second() = 
+    let val name = "bye" 
+    in 
+        first() 
+    end 
+
+val result3 = second() 
+```
+_first_ 함수에서 _name_의 **scope**는  
+_second_ 함수에서 _first_함수를 호출할때의 **scope**가 아닌 _first_함수가 선언될 당시의 **scope**를 따라간다.  
+즉, _result3_ 의 값은 "hi"가 된다. 
+
+이처럼 함수가 정의될 때를 기준으로 **scope**가 정해지는 것을 **Lexical scope(Static scope)**라고 한다. 
+
+다음 예제를 보면서 한번 더 생각해보자.
+```haskell
+(*1*) val x = 1 
+(*2*) fun f y = x+y 
+(*3*) val x = 2 
+(*4*) val y = 3 
+(*5*) val z = f(x+y) 
+```
+**1:** _x_ 를 1에 map한다.  
+**2:** _f_ 를 1+arg에 map한다. (_f_ 가 선언될 당시의 environment에서 _x_ 는 1이기때문에)  
+**3:** _x_ 에 2를 map한다.  
+**4:** _y_ 에 3을 map한다.  
+**5:** 현재 environment에서 _x+y_ 인 5를 인자로 _f_ 를 호출한다.  
+이 때 _f_ 는 본래 선언 연산인 _x+y_ 를 연산하지 않고 environment에 추가될 당시의 1+arg를 계산한다.  
+반환값은 6이되어 _z_ 에 6을 map한다.  
+
+
+저번 게시글에서 **Closure**에 대해 설명을 했었다.  
+위에서 environment에 _f_ 를 map하는것은 사실 **closure**를 environment에 추가하는것인데,  
+기본적으로 function value에는 2가지 요소가 있다. 
+- **Code**
+- 함수가 선언될당시의 **현재 environment** 
+
+ML에서 흔히 쓰이는 pairs처럼 접근할 수 없지만,   
+이 2가지 요소를 합쳐서 **"pair"**라고 부를 수 있는데,  
+이 **pair**는 **Function closure**이다. 
+
+이 **Function closure**의 측면에서 다시 위 코드를 살펴보자. 
+```haskell
+(*1*) val x = 1 
+(*2*) fun f y = x+y 
+(*3*) val x = 2 
+(*4*) val y = 3 
+(*5*) val z = f(x+y) 
+```
+
+2번째 줄에서 **closure**을 생성하고 이를 _f_ 에 binding할 때의 **pair** 상태 
+- **Code:** y를 인자로 받아서 x+y를 연산해야한다. 
+- **Environment:** x를 1에 map한다. 
+
+5번째 줄에서 우리는 **closure**를 5라는 인자를 주면서 불러온다.  
+기존 **pair**에 이미 _x_ 를 1에 map되어있는 **environment**에 _y_ 를 5에 map해서 code를 실행한다.  
+정확하게 말하면 _x+y_ 를 연산하는데,  
+이 때의 환경은 _x_ 는 1에, _y_ 는 5에 map되어있는 **closure**의 **environment**에서 연산하게 되는것이다.  
+
+.
+
+정리해보면, 
+- function body는 function이 선언될 때의 **environment**에서 evaluate를 한다. 
+- 함수가 호출되면서 argument가 넘어오면 **environment**를 확장하면서 argument를 evaluate한다. (argument의 map만 이루어진다.) 
+- 우리가 function을 받거나 return할 때도 같은 원리가 적용된다. 
+- **First-class function**을 만드는게 훨씬 더 강력하다.(물론 반직관적일수는 있다.) 
+
+
+다음 함수를 반환하는 예제를 보자. 
+```haskell
+(*1*) val x =1 
+(*2*) fun f y = 
+(*2a*)    let val x = y+1 
+(*2b*)    in fn z => x+y+z end 
+(*3*) val x = 3 
+(*4*) val g = f 4 
+(*5*) val y = 5 
+(*6*) val z = g 6 
+```
+
+2번째 줄에서 **closure**을 생성하고 _f_ 에 binding한다. 
+- **Code :** y를 인자로 받아서 y+1을 연산하고 x에 대입한다. z를 인자로 받아서 x+y+z를 연산한다. 
+- **Environment :** x를 y+1에 map한다.(shadowing) 
+- 그러므로 반환되는 값은 arg -> 2y+1+arg 이다. 
+
+4번째 줄에서 g에 binding되는 closure의 pair를 evaluate해보자. 
+- **Code :** _z_ 를 인자로 받아서 _x+y+z_ 를 연산해야한다. 
+- **Environment :** _y_ 를 4에 map하고, _x_ 를 5에 map한다. ...  
+(이때 1번째 줄에 이미 x가 있으니 shadowing하는것이다)
+- 그러므로 반환되는 값은 '9+arg' 이다. 
+
+따라서 6번째 줄에서 _z_ 에 반환되는 값은 15이다.  
+Environment 마지막에 있는 ... 는 이전 environment이다.  
+.
+
+이번에는 인자로 함수를 넘겨주는 예제를 보자. 
+
+```haskell
+(*1*) fun f g = 
+(*1a*)    let val x=3 
+(*1b*)    in g 2 end 
+(*2*) val x = 4 
+(*3*) fun h y = x + y 
+(*4*) val z = f h 
+```
+
+물론 여기서 1a는 **Static scope**에서는 아무쓸모없는 코드이다.  
+(**Dynamic scope**에서는 아니다. 이유는 차후에 설명하도록 하겠다.)
+
+3번째 줄에서 _h_를 **closure**에 bind할 때 **closure**의 **pair**를 evaluate해보자. 
+- **Code :** y를 인자로 받아서 x+y를 연산한다. 
+- **Environment :** _x_ 를 4에 map하고 _f_ 를 **closure**에 map한다. ... 
+- 따라서 이 **closure**는 4+arg를 반환한다. 
+
+4번째 줄에서 _z_ 에 들어가는 값은 4+2 즉 6이 된다. 
+
+.
+
+.
+
+### Lexical scope 
+
+**Lexical scope**는 함수가 선언될 때의 **environment**를 이용한다.  
+**Dynamic scope**는 함수가 호출될 때의 **environment**를 이용한다. 
+
+예전에는 두 방법 모두 합리적이었지만,  
+현재는 **lexical scope**가 더 합리적이라고 여겨진다.  
+이유는 다음과 같다. 
+
+**1.** 함수의 의미가 사용되는 변수의 의미에 의존하지 않는다. 
+다음 코드를 보자. 
+```haskell
+val b = 5 
+fun foo() = 
+    let val a = b + 5 
+    in a 
+    end 
+
+fun bar() = 
+    let val b = 2 
+    in foo() 
+    end 
+
+val x = foo() 
+val y = bar() 
+```
+
+물론 ML은 **Static scope(lexcical scope)**로 동작하지만,  
+위코드를 **Dynamic scope**를 사용해서 계산해보자.  
+
+**Static scope**에서는 x=10, y=10이지만,  
+**Dynamic scope**에서는 x=10, y=7이다. 
+
+만약 bar함수에 있는 b의 변수명을 c로 바꾼다면  
+**Static scope**에서는 값의 변화가 없지만,  
+**Dynamic scope**에서는 값의 변화가 있다. 
+
+또한 **Static scope**에서는 _bar_함수에서 _b_ 를 2에 binding하는것은 의미가 없기때문에 제거를 해도 된다.  
+그러나 **Dynamic scope**에서는 그럴 수 없다. _foo_ 함수에서 _b_ 를 사용하기 때문이다. 
+
+.
+
+**2.** 함수가 선언될때 **type-check**를 할 수 있다.  
+다음 코드를 보자 
+```haskell
+val x = 1 
+fun f y= 
+    let val x = y+1 
+    in fn z => x+y+z end 
+val x = "hi" 
+val g = f 7 
+val z = g 4 
+```
+
+**Dynamic scope**에서는 x가 중간에 string으로 변경되는 바람에  
+함수 내에서 string과 숫자를 더하려고 할것이다. 
+
+**3.** Closure가 그들의 연산에 필요한 데이터들을 쉽게 저장할 수 있다.  
+.
+
+.
+
+
+# Recomputation 
+
+우리는 다음과 같은 사실을 안다. 
+- function body는 function이 호출되기 전까지 evaluate되지 않는다. 
+- function body는 function이 호출될 때마다 evaluate된다. 
+- variable은 binding이 evaluate될 때만 expression을 evaluate한다. variable이 사용될 때마다 evaluate하지 않는다. 
+
+Closure에 관련해서 이것은 function argument에 따라 계산을 계속 반복하지 않는다는 뜻이다. 
+
+다음 두 함수를 비교해 보자. 
+```haskell
+fun allShorterThan1 (xs,s) = 
+    filter(fn x => String.size x < String.size s, xs) 
+
+fun allShorterThan2 (xs,s) = 
+    let val i = String.size s 
+    in filter(fn x => String.size x < i, xs) end 
+```
+
+첫번째 함수에서는 filter안의 Ananymouse function이 호출될 때 마다 s의 값을 다시 계산할 것이다.  
+그러나 두번째 함수에서는 그럴 필요가 없다.  
+불필요한 재계산을 제거한 것이다. 
+
+# Fold function 
+Fold 함수는 저번에 소개한 filter와 map처럼 유명한 함수이다. 
+
+```haskell
+fun fold (f,acc,xs) = 
+    case xs of 
+        [] => acc 
+      | x::xs => fole(f,f(acc,x),xs) 
+```
+_f_ 에 따라 "fold-left",  "fold-right" 를 결정하면 된다. 
+```haskell
+val fold = fn : ('a*'b->'a)*'a*'b list -> 'a 
+```
+
+이러한 "반복문같은" 함수들은 언어에 built-in 되어 있지 않다. (많은 언어들에서 built-in support를 제공하고 있긴하다.)  
+이러한 pattern들은 데이터 처리와 재귀실행을 분리 해 준다.  
+
+또한 서로 다른 데이터 처리에 대해 같은 재귀실행을 하기 위해 재사용을 되거나,  
+서로 다른 데이터 구조에 대해 같은 데이터처리를 하기 위해 재사용 되거나, 
+혹은 둘다의 경우를 하도록 도와준다. 
