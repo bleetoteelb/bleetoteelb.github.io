@@ -1,0 +1,327 @@
+---
+layout: post
+title:  "Programming Language 3"
+subtitle:   "Programming Language 3"
+categories: devlog
+tags: pl
+---
+
+
+Local Bindings, Options, Benefits of No mutation 
+
+# 1. Let-expressions 
+
+이번에는 function 안에서 binding을 하도록 도와주는 **let-expression**에 대해 알아보자.  
+늘 그래왔듯 3가지 측면으로 나누어서 분석해볼것이다. 
+
+>**1. Syntax:** let b1 b2 ... bn in e end  
+>_-_ 각 bi 들은 binding들이고 e는 expression이다.  
+
+>**2. Type-checking:** 이전까지의 binding을 포함하고 있는 정적환경(static environment)에서 bi와 e의 타입을 확인한다.  
+_-_ 전체 let-expression의 타입은 e의 타입이다. 
+
+>**3. Evaluation:** 이전까지의 binding을 포함하고 있는 동적환경(dynamic environment)에서 bi와 e의 타입을 확인한다.  
+_-_ 전체 let-expression의 결과는 e의 evaluating 결과이다. 
+
+**let-expression**은 expression이기 때문에 expression이 쓰일 수 있는 곳이면 어디든 쓰일 수 있다.  
+함수호출의 argument로도 사용할 수 있고, let-expression안에 let-expression을 중첩해서 쓰는것도 가능하다.  
+
+다음 예제를 보자. 
+```haskell
+fun silly1 (z:int) = 
+    let val x = if z>0 then z else 34 
+        val y = x+z+9 
+    in 
+        if x>y then x*2 else y*y 
+    end 
+
+fun silly2 () = 
+    let val x =1 
+    in 
+        (let val x=2 in x+1 end) + 
+        (let val y=x+2 in y+1 end) 
+    end 
+
+val result1 = silly1(~3) 
+val result2 = silly1(let val x=10 in x*3 end) 
+val result3 = silly2() 
+```
+
+결과는 다음과 같다. 
+```haskell
+val silly1 = fn : int -> int 
+val silly2 = fn : unit -> int 
+val result1 = 1600 : int 
+val result2 = 4761 : int 
+val result3 = 7 : int 
+```
+
+
+silly2와 result2의 호출인자는 단지 let-expression의 쓰임을 보여주기 위한 함수일뿐인 멍청한 style이다.  
+우리가 여기서 주목해야 할점은 3가지이다.  
+1. **let-expression**은 expression이다.  
+ 때문에 위처럼 argument에도 쓸 수 있고 **let-expression**의 in에서도 사용할 수 있다. 
+2. _silly2_의 input type은 **unit** 이다. 
+**unit** 은 아무것도 없는 **none**이나 **void**와 같은 개념이다. 
+3. _silly2_에서 _x_ 가 두 번 binding 되었는데, let안에서 binding된 변수는 let이 끝나면 소멸된다. (function과 같은 개념이라고 생각하면 된다.)  
+때문에 **let-expression**안의 첫번째 **let-expression**에서 binding된 _x_ 는 두번째 **let-expression**에는 영향을 끼치지 않는다.  
+다시말해 두번째 **let-expression**에서의 x값은 1이다. 
+
+.
+
+.
+
+
+이와 관련된 개념이 scope인데, 한국말로하면 '유효범위'쯤 된다.  
+프로그램 언어에서 scope는 어느 범위까지 참조하는지, 즉, 변수와 매개변수(parameter)의 접근성과 생존기간을 뜻한다.  
+
+scope의 종류는 크게 두가지가 있는데,  
+하나는 **전역 유효범위(Global Scope)**, 또 하나는 **지역 유효범위(Local Scope)**이다.  
+**Global Scope**는 스크립트 전체에서 참조되는 것을 의미하고,   
+**Local Scope**는 정의된 함수 안에서만 참조되는 것을 의미하며,   
+함수 밖에서는 참조하지 못한다. 
+
+다음 그림을 보면 이해가 될 것이다. 
+
+![scope](https://bleetoteelb.github.io/assets/img/Scope.png)
+
+위 그림과 같은 개념을 아래 코드를 보면서 생각해보자.
+
+```haskell
+val scop = 3 
+fun silly4 () = 
+    let val scop = 4 
+    in scop 
+    end 
+
+val loc = silly4() 
+val glo = scop 
+```
+첫번째 줄에 정의 되어 있는 scop의 scope는 위 코드 전체이다.  
+그러나 silly4에 정의되어있는 scop은 함수내의 **let-expression**에 한정된다.
+
+때문에 loc의 값은 4이고, glo의 값은 3이 된다.
+
+# 2. Functions in Function 
+
+다시 **let-expression**의 기본 구조로 돌아가보자 
+```haskell
+let b1 b2 ... bn in e end 
+```
+여기서 _bi_ 들은 binding들이기 때문에 variable binding뿐 아니라 function binding도 가능하다. 
+
+다음 두 함수를 보자. 
+```haskell
+fun countup_from1 (x:int) = 
+    let fun count (from:int, to:int) = 
+            if from = to 
+            then to::[] 
+            else from::count(from+1,to) 
+    in 
+        count(1,x) 
+    end 
+
+fun countup_from1_better (x:int) = 
+    let fun count (from:int) = 
+        if from = x 
+        then x::[] 
+        else from::count(from+1) 
+    in 
+        count 1 
+    end 
+```
+ 
+위 두함수는 같은 일을 수행하는 함수이다.  
+**let-expression**안에 count 함수가 local binding되어 쓰이고 있다.  
+
+그러나 함수 내에 쓰이는 변수라 할지라도 첫번째 함수의 **'to'** argument처럼  
+더 넓은 scope쪽에서 접근 가능한 변수라면 아래 함수와 같이 써주는것이 더 좋은 style이라고 할 수 있다.  
+
+각 함수 **let-expression**안의 _count_ 함수들의 **scope**를 생각해보면,  
+당연하게도 각각의 **let-expression**이 끝나면 _count_ 함수들은 소멸한다.  
+즉, _countup_from1_ 에 있는 count함수는 _countup_from1_better_ 함수에서 쓸 수 없다는 뜻이다.  
+
+함수는 그 함수가 정의된 **environment**만이 **scope**로 가진다.  
+
+.
+
+이렇게 함수 안에서 새로 정의되어 함수의 수행을 돕는 함수를 **helper function**이라고 하는데,  
+이런 **helper function**가 함수 안쪽에 쓰이는경우는 다음과 같다. 
+1. 다른곳에서는 쓰이지 않을 것 같을 때, 
+2. 다른곳에서 쓰이면 잘못된 결과가 나올 가능성이 있을 때, 
+3. 차후에 바뀌거나 제거될 가능성이 있을 때 
+
+기본적으로 전체적인 프로그램을 디자인할때,  
+재활용되는 코드들은 수고로움을 줄여주고 오류를 피하게 해주지만, 나중에 바꿀수 없다는 것을 유의하자. 
+
+.
+
+. 
+
+# 3. Repeated recursion 
+
+Recursive function이나 반복문을 디자인할때 가장 조심해야 하는 것이 불필요한 반복이다.  
+다음 _bad_max_ 함수를 보자 
+```haskell
+fun bad_max (xs:int list) = 
+    if null xs 
+    then 0 
+    else if null (tl xs) 
+    then hd xs 
+    else if hd xs > bad_max (tl xs) 
+    then hd xs 
+    else bad_max (tl xs) 
+```
+
+한번 _bad_max_ 가 실행될때마다 2개의 _bad_max_ 를 호출한다.  
+이 말은 요소들이 **[1,2,...,50]** 인 list의 결과를 확인하기 위해서  
+**1+2+2^2+2^3+...+2^50** 번의 _bad_max_ 가 실행되어야 한다는 뜻이다. 
+
+이를 방지하기 위해 recursion의 결과를 local binding에 저장해보자. 
+```haskell
+fun good_max (xs:int list) = 
+    if null xs 
+    then 0 
+    else if null (tl xs) 
+    then hd xs 
+    else 
+        let val tl_ans = good_max(tl xs) 
+        in 
+            if hd xs > tl_ans 
+            then hd xs 
+            else tl_ans 
+        end 
+```
+이는 같은 list인 **[1,2,...,50]** 이 들어와도 단 한번의 재귀함수를 호출하기 때문에 매우 효율적이다. 
+
+.
+
+.
+
+
+# 4.  Options 
+
+이제부터 **Option** 이라는 새로운 type을 알아볼 것이다.  
+**t option**이라고 쓰게되면 임의의 t type에 대한 type이다.(이 때 t는 int, list, bool 등) 
+
+_t option_ 을 표현하는 방법은 2가지 밖에 없다.  
+- **NONE :** type은 'a option이다. (list에서 []와 같은 개념이다.)   
+- **SOME e :** e의 type이 t일때 SOME e는 t option이다.(e::[]와 같은 개념이다.)  
+
+이 type에 대한 접근은 다음과 같이 하면 된다.  
+- **isSome :** NONE인지 아닌지를 구분해준다.  
+    NONE이면 false를, 그렇지않으면 true를 반환한다. ('a option -> bool) 
+    
+- **valOf :** SOME e에서 e의 값을 반환해준다.('a option -> 'a)   
+    단, **valOf NONE** 은 오류가 나므로 **isSome** 을 통해 _e_ 가 **NONE**인지를 먼저 확인해줘야 한다.   
+    예를 들어 다음 함수들중 첫번째 함수처럼 쓰면 안되고, 두번째 함수처럼 써야한다. 
+
+```haskell
+fun getValbad (x:int option) = 
+    valOf x 
+
+fun getValgood (x:int option) = 
+    if isSome x 
+    then valOf x 
+    else 0 
+```
+
+ _getValbad_ 에 **NONE**을 넘기면 오류를 반환한다. 
+
+이 type이 생겨난 이유는, 
+어떤 함수로 NONE이나 어떤 다른 타입을 둘 다 반환 할 수 있어야 할 경우를 해결하기 위해서이다.  
+function은 무조건 한가지 type만 반환해야 하기 때문에 다음의 함수는 오류를 낸다. 
+
+```haskell
+fun get_first_ele (x:int list) = 
+    if null x 
+    then NONE 
+    else hd x 
+```
+
+list안의 인자와 NONE을 동시에 받고 싶다면 다음과 같이 수정하면 된다. 
+```haskell
+fun get_first_ele (x:int list) = 
+    if null x 
+    then NONE 
+    else SOME (hd x) 
+```
+
+.
+
+
+이를 이용해서 max를 구하는 함수를 다시 작성해보자. 
+```haskell
+fun better_max (xs:int list) = 
+    if null xs 
+    then NONE 
+    else 
+        let val tl_ans = better_max(tl xs) 
+        in 
+            if isSome tl_ans andalso valOf tl_ans > hd xs 
+            then tl_ans 
+            else SOME(hd xs) 
+        end 
+```
+
+여기서 **andals**o는 다른언어의 **&&**와 같은 역할이다.  
+앞의 expression이 참일때만 뒷 expression에 대한 참/거짓을 판별한다.  
+만약 앞의 expression이 거짓이라면 뒷 expression은 skip한다. 
+
+그러나 위 함수처럼 의미없는 valOf가 너무 많이 쓰이는것은 선호되지 않는다.  
+더 좋은 style은 다음과 같다. 
+```haskell
+fun better_max2 (xs:int list) = 
+    if null xs 
+    then NONE 
+    else let 
+            fun max_nonempty (xs:int list) = 
+                if null(tl xs) 
+                then hd xs 
+                else 
+                    let val tl_ans = max_nonempty(tl xs) 
+                    in 
+                        if hd xs > tl_ans 
+                        then hd xs 
+                        else tl_ans 
+                    end 
+        in 
+            SOME (max_nonempty xs) 
+        end 
+```
+(사실 valOf가 많이 쓰이는게 왜 별로인지 잘 모르겠다.그렇다니까 그런거지 뭐) 
+
+
+# 5.  Mutations 
+
+다음 두 함수를 보자 
+```haskell
+fun sort_pair (pr:int*int) = 
+    if #1 pr < #2 pr 
+    then pr 
+    else (#2 pr, #1 pr) 
+
+fun sort_pair (pr:int*int) = 
+    if #1 pr < #2 pr 
+    then (#1 pr, #2 pr) 
+    else (#2 pr, #1 pr) 
+```
+
+분명 위함수와 아래함수는 다른 함수이다.  
+mutation이 있는 다른 언어(JAVA)였다면,  
+pr을 그대로 반환하는(aliasing) 위 함수와  
+pr의 내용을 복사해서 반환하는(identical copy) 아래함수는 차후에 다른 결과를 만들어낼 수 있다. 
+
+그러나 ML에서는 mutation이 없기때문에 걱정할 필요 없다.  
+즉, 다음 함수가 a와 같은 형태인지, b와 같은 형태인지 고민할 필요가 없다는 뜻이다. 
+```haskell
+fun append (xs:int list, ys:int list)= 
+    if null xs 
+    then ys 
+    else hd(xs)::append(tl(xs),ys) 
+
+val x = [2,4] 
+val y = [5,3,0] 
+val z = append(x,y) 
+```
+![mutation](https://bleetoteelb.github.io/assets/img/mutation.JPG)

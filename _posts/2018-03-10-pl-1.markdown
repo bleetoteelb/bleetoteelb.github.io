@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Programming Language 기초"
-subtitle:   "Programming Language 기초"
+title:  "Programming Language 1"
+subtitle:   "Programming Language 1"
 categories: devlog
 tags: pl
 ---
