@@ -141,7 +141,7 @@ Environment 마지막에 있는 ... 는 이전 environment이다.
 
 .
 
-### Lexical scope 
+### Static vs Dynamic
 
 **Lexical scope**는 함수가 선언될 때의 **environment**를 이용한다.  
 **Dynamic scope**는 함수가 호출될 때의 **environment**를 이용한다. 
@@ -204,7 +204,7 @@ val z = g 4
 .
 
 
-# Recomputation 
+# 2. Recomputation 
 
 우리는 다음과 같은 사실을 안다. 
 - function body는 function이 호출되기 전까지 evaluate되지 않는다. 
@@ -227,7 +227,7 @@ fun allShorterThan2 (xs,s) =
 그러나 두번째 함수에서는 그럴 필요가 없다.  
 불필요한 재계산을 제거한 것이다. 
 
-# Fold function 
+# 3. Fold function 
 Fold 함수는 저번에 소개한 filter와 map처럼 유명한 함수이다. 
 
 ```haskell
