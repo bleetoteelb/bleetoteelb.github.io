@@ -6,6 +6,8 @@ categories: devlog
 tags: pl
 ---
 
+First-Class Functions
+
 # 1. First-class functions(일급 객체 함수) 
 
 다음과 같은 조건을 만족할 때 **일급 객체**라고 말할 수 있다.  

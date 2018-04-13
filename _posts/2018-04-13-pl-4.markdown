@@ -1,0 +1,335 @@
+---
+layout: post
+title:  "Programming Language 4"
+subtitle:   "Programming Language 4"
+categories: devlog
+tags: pl
+---
+
+Records, Datatypes, Case Expressions 
+
+# 0. 들어가기 앞서
+
+### 0-1 프로그래밍의 요소
+
+프로그래밍 공부를 하다보면 마주치게 되는 5가지 요소들이다. 
+>1. **문법(Syntax)** : 이 언어를 어떻게 써야 하는가? 
+>2. **의미(Semantics)** : 이 프로그램은 무엇을 뜻하는가? (Evaluation 규칙에 따라) 
+>3. **관용구(Idioms)** : 당신이 표현하고자 하는 계산을 사용하는 언어의 일반적인 패턴으로 어떻게 표현하는가? 
+>4. **라이브러리(Libraries)** : 언어가 "표준"으로 제공하는 기능은 무엇인가? (예>file access, data structures) 
+>5. **툴(Tools)** : 당신의 일을 더 쉽게 하기 위해 언어 구현이 제공하는것이 무엇인가? (예>REPL,debugger, code formatter) 
+
+위 5가지 사항은 훌륭한 프로그래머를 위해 필수적으로 헷갈리지 말아야 하는 것들이다. 
+
+하지만 지금은 **semantic**과 **idiom**에만 집중할 것이다. 
+
+### 0-2  Building Block
+
+우리는 지금까지 **int, bool, unit, char**와 같은 _base type_ 과  
+**tuples, lists,option**과 같은 _compound type_ 을 알아봤다. 
+
+지금부터 또 다른 _compound type_ 을 알아볼 것이다. 
+
+그에 앞서 어떤 언어에서든 중요한 3가지 중요한 **type building block**을 살펴보자. 
+- **"Each of"** : _t_ 값은 _t1 t2 ... tn_ 각각의 값을 포함한다. 
+- **"One of"** : _t_ 값은 _t1 t2 ... tn_ 중 한가지의 값을 포함한다. 
+- **"Self reference"** : _t_ 값은 자기 자신의 _t_ 값을 참조한다. 
+
+수 많은 data가 위 3가지 **building block**으로 설명 할 수 있다. 
+
+예시를 보자.  
+
+**1.** Tuple은 **"Each of"**로 구성된다. 
+- _int*bool_ 은 _int_와 _bool_ 각각을 포함한다. 
+
+**2.** Options는 **"one of"**로 구성된다. 
+- _int option_은 _int_를 포함하거나, _no data(NONE)_ 을 포함한다. 
+
+**3.** _lists_는 세 **building block**을 모두 사용한다. 
+- _int list_는 _int_와 _int list_를 포함하거나 _no data_ 를 포함한다. 
+
+.
+
+
+이번 게시글에서는 **each of**을 이용한 **"Records"**라는 type을 알아보고,  
+**one of**를 이용한 새로운 유형의 type을 내 입맛대로 정의해 볼 것이다. 
+
+.
+
+.
+
+# 1. Records 
+
+**Record**는 _value_와 _field_ 로 이루어진 요소들의 집합체이다.
+```haskell
+{f1 = v1, ... , fn = vn} 
+```
+**Record** type은 다음과 같이 표현한다. 
+```haskell
+{f1:t1, ... , fn:tn} 
+```
+
+정의할때는 '=' 를 쓰고 type을 표현할때는 ':' 를 쓴다는 점을 절대 혼동하지 말자.  
+이 **record**에 접근할때는 **#filedname e** 이라고 쓰면 된다. 
+
+이번에도 3가지 측면으로 나누어서 **records**를 분석해보자.  
+**1. Syntax :**  
+```haskell
+val x = {f1 = e1, ... , fn = en} 
+```
+- 각 _f1_들은 **field name**이고 _e1_은 실제 **value**들이다.   _f1=e1_자체가 **value**이기도 하다. 
+- 이 때 ei들은 expression으로 **let-expression**과 같은 형태도 사용 가능하다.  
+
+**2. Type-checking :**
+- type check는 e1,...,en에 대해서만 하게된다.  
+- 각각이 t1,...,tn의 type이라면 x의 type은 {f1:t1, ... ,fn:tn}이다.  
+
+**3. Evaluation :**  
+- x record를 environment에 추가함으로써 이후에 이 record를 사용할 수 있도록 한다.   
+- 이 때 f1=e1,...,fn=en의 순서는 상관없으며(그러나 알파벳순,숫자 오름차순으로 정렬되는것 같다.),  
+- e1,...,en을 v1,...,vn에 각각 evaluate하고 그 결과는 (f1=v1,...,fn=vn)이다. 
+
+.
+
+예를들어 다음과 같은 record가 있다고 하자. 
+```haskell
+{name="Amelia",id=41123-12} 
+```
+그럼 이 record는 다음과 같이 evaluate된다. 
+```haskell
+{id=41111,name="Amelia"} 
+```
+그리고 다음과 같은 type을 갖게 된다. 
+```haskell
+{id:int,name:string} 
+```
+
+위 record가 x라 할때, 각 요소에 접근하기 위해서는 다음과 같이 쓰면 된다. 
+```haskell
+#id x 
+#name x 
+```
+
+.
+
+.
+
+
+
+# 2.  Name vs Position 
+
+그럼 여기서 **Tuple**과 **Record**의 차이점을 알아보자.  
+사실 _(4,7,9)_ 으로 **tuple**을 쓰나,  
+_{f=4,g=7,h=9}_ 으로 **Record**를 쓰나 의미상으로는 크게 차이가 없다.   
+
+다만, **tuple**은 좀 더 짧다.  
+그러나 **record**는 _field name_ 을 이용해서 무엇이 어디에 있는지를 기억해내기 쉽다.  
+취향차이겠지만 _field_ 의 개수가 많아질수록 **record**가 유리하다.  
+
+.
+
+하지만 결국 **Tuple**은 **Record**를 쓰는 다른 방법이라고 생각할 수 있다.  
+_(e1,...,en)_ 은 _{1=e1,...,n=en}_ 으로 쓸 수 있고,  
+_(t1\*...\*tn)_ 역시 _{1:t1,...,n:tn}_ 으로 쓸 수 있기 때문이다.  
+즉, **Tuple**은 _field name_ 이 오름차순 숫자인 **Record**라는 것이다. 
+
+실제로 ML에서 _{1=2,2=2,3=3}_ 라고 쓰면 프로그램은 (1,2,3)으로 evaluate한다. 
+
+![tuple](https://bleetoteelb.github.io/assets/img/tuple.JPG)
+
+.
+
+
+이 둘의 차이는 원하는 값을 **Name**으로 찾을것이냐, **Position**으로 찾을것인가의 문제가 된다.  
+**tuple**은 **position**으로 찾을것이고, **Record**는 **Name**으로 찾을것이다.  
+**Name과 Position**의 관계는 우리가 함수를 호출하고 함수에서 인자를 받을 때 이루어지고 있다. 
+```haskell
+fun divide (a:int,b:int) 
+a div b 
+
+divide(6,4) 
+```
+라는 코드가 있다고 생각해보자. 
+
+6이 a에 대응되고 4가 b에 대응되는것은 **position**으로 대응한 결과이다.  
+때문에 **Caller**는 **position**을 사용한다. 
+
+그러나 **Callee**인 _divide_ 함수에서는 a=6으로, b=4로 받고 나면 그것을 사용하는데 있어 a,b의 위치는 중요하지 않다.  
+a,b라는 Name만이 중요하다.  
+때문에 **Callee**는 **Name**을 사용한다고 할 수 있다. 
+
+.
+
+.
+
+
+
+# 3.  Syntactic sugar 
+
+**Syntactic sugar**는 이해하기 쉽거나, 쓰기 쉽거나, 구현하기 쉬운 문법적으로 편한형태로 바꾸었다는것을 말한다. 
+
+예를들어 위에서 설명한 **tuple**과 **record**의 관계를 비추어 보았을때,  
+**Tuples**는 _field name_ 이 _1,2,...n_ 인 **record**를 위한 **syntactic sugar**이라고 할 수 있다. 
+
+이 외에도 syntactic sugar의 예는 많다. 
+```haskell
+if then else => andalso / orelse 
+x=x+5 => x+=5 
+class 
+*(a+i) => a[i] 
+```
+
+.
+
+.
+
+
+
+# 4. 새로운 Datatype 만들기 
+
+내가 필요한 요소만 골라서 Datatype을 새로 정의할 수도 있다. 
+```haskell
+datatype mytype = TwoInts of int * int 
+                | Str of string 
+                | Pizza 
+```
+
+자, 이제 _mytype_ 이라는 새로운 type을 environment에 등록했다.  
+동시에 _TwoInts, Str, Pizza_ 라는 constructor도 함께 등록했다.  
+
+이젠 각각의 tag들은 다음과 같이 type-checking이 될 것이다.  
+```haskell
+TwoInts : int*int -> mytype 
+Str : string -> mytype 
+Pizza : mytype 
+```
+
+사용 예시는 다음과 같다.  
+```haskell
+val a = Str "hi" 
+val b = Str 
+val c = Pizza 
+val d = TwoInts(1+2,3+4) 
+val e = a 
+```
+evaluate와 type-checking한 결과는 다음과 같다. 
+```haskell
+val a = Str "hi" : mytype 
+val b = fn : string -> mytype 
+val c = Pizza : mytype 
+val d = TwoInts (3,7) : mytype 
+val e = Str "hi" : mytype 
+```
+
+여기서 주목할 점은 변수 b는 type이 아니라 function이다.  
+아직 string값을 받지 못했기 때문에 string→mytype으로 변환하는 함수 상태인 것이다.  
+
+.
+
+
+이제는 이 정의된 변수들에 어떻게 접근할지를 생각해보자.  
+다른 **one of** 로 정의된 type들을 보면 다음 두가지 측면으로 접근했다.  
+>1. 변수가 무엇인지, 어떤 상태인지 확인 → _null, isSome_ 
+>2. (만약 존재한다면) 데이터 추출하기 → _hd, tl, valOf_
+
+ML에서는 이 두가지 측면을 합쳐서 **case expression**과 **pattern-matching**을 이용한다.  
+다음 함수를 보자.  
+```haskell
+fun f x = 
+    case x of 
+        Pizza           => 3 
+      | TwoInts(i1,i2)  => i1+i2 
+      | Str s           => String.size s 
+```
+**case expression**을 이용해 _x_ 의 상태에 따라서 constructor를 구분했고  
+**pattern-matching**을 이용해 _x_ 와 맞는 constructor가 무엇인지를 판단한다.  
+
+_Pizza, TwoInts(i1,i2), Str s_ 는 **pattern**들이다.  
+**case**내의 각각의 분류는 **branch**라고 한다.  
+
+이때, 각 **branch**마다 나오는 결과 값은 반드시 같은 type이어야 하며. **(Type-checking)**  
+**case ... of** 에 있는 **...** 과 맞는 **branch**의 **pattern**을 evaluate를 한다 **(Evaluation)**  
+
+다음 _a1~a6_ 을 보고 결과값을 예측해보자  
+```haskell
+val a1 = f Pizza 
+val a2 = f (Str "hi") 
+val a3 = f (TwoInts(1+2,3+4)) 
+val a4 = f (Str "good morning") 
+val a5 = f (TwoInts(if a1>a2 then 1 else 10,if a3>a4 then 5 else 6)) 
+val a6 = f (TwoInts(if a5=3 then a5 else 5, ~3)) 
+```
+
+결과는 다음과 같다. 
+```haskell
+val a1 = 3 : int 
+val a2 = 2 : int 
+val a3 = 10 : int 
+val a4 = 12 : int 
+val a5 = 7 : int 
+val a6 = 2 : int 
+```
+
+.
+
+정리해보면 **Pattern matching & case expression**의 syntax는 다음과 같다. 
+
+```haskell
+case e0 of 
+p1 => e1 
+   | p2 => e2 
+    ... 
+   | pn => en 
+```
+
+여기서 _ei_들은 모두 expression이지만, _pi_들은 expression이 아니다.  
+그들은 constructor와 그에 상응하는 변수들이 따라오는 pattern들이다. ( _C_ 혹은 _C x_ 혹은 _C(x,y)_ 등)  
+프로그램은 _pi_를 evaluate하지 않고 _e0_ evaluation 결과와 match한다.  
+
+.  
+.
+
+**case-expression**을 이용한 **pattern matching**이 좋은 점은 다음과 같다. 
+>1. Data를 추출하는 함수를 만들거나 type test를 할 때 유용한다. 
+>2. 빼놓은 case가 없는지 확인할 수 있다. (빠진것이 있다면 **inexhaustive** pattern-match 경고가 뜬다) 
+>3. 중복되는 case를 쓸 수 없다 (type-cheking 에러가 뜬다 - **Redundant**) 
+>4. 예외를 얻거나 변수를 올바르게 썼는지 확인 할 수 있다. (hd []와 같은 값을 잡아낼 수 있다) 
+>5. **Pattern-matching**은 일반화할 수 있고, 코드를 좀 더 강력해지고, 우아하고, 간결하게 만들어준다. 
+
+다음은 방금 말했던 Inexhaustive와 Redundant의 예시이다. 
+
+```haskell
+(* Inexhaustive *) 
+fun g x =  
+    case x of 
+        Pizza => 3 
+
+(* Redundant *) 
+fun f x = 
+    case x of 
+        Pizza           => 3 
+    |   TwoInts(i1,i2)  => i1+i2 
+    |   Str s           => String.size s 
+    |   Pizza           => 4 
+```
+
+특정한 값들만 matching하고 그외의 값들은 한꺼번에 처리하는 방법도 있다. 
+
+```haskell
+fun g x = 
+    case x of 
+        Pizza   => 3 
+      |   _     => 4 
+```
+여기서 \_는 **anything else**를 나타내는 것인데,  
+이 표현을 쓸 때 조심해야 할 것은 필요한 **pattern**들을 먼저 나열하고 가장 마지막에 써야 한다는 것이다.  
+
+**case-expression**은 **pattern-matching**에 성공한 첫번째 **branch**에서 계산후 종료하기 때문에  
+다음과 같이 쓰면 모든 반환값이 4가 되는 불상사가 생긴다.  
+
+```haskell
+fun g x = 
+    case x of 
+         _      => 4 
+      |  Pizza  => 3 
+```
