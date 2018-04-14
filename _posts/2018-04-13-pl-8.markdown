@@ -234,7 +234,7 @@ Fold 함수는 저번에 소개한 filter와 map처럼 유명한 함수이다.
 fun fold (f,acc,xs) = 
     case xs of 
         [] => acc 
-      | x::xs => fole(f,f(acc,x),xs) 
+      | x::xs => fold(f,f(acc,x),xs) 
 ```
 _f_ 에 따라 "fold-left",  "fold-right" 를 결정하면 된다. 
 ```haskell

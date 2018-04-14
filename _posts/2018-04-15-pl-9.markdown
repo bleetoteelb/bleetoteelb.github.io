@@ -1,0 +1,628 @@
+---
+layout: post
+title:  "Programming Language 9"
+subtitle:   "Programming Language 9"
+categories: devlog
+tags: pl
+---
+Function-Closure Idioms  
+
+
+# 1. Combine functions  
+
+function을 combine하는 기본적인 compose 함수는 다음과 같다.  
+```haskell
+fun compose (f,g) = fn x => f (g x)  
+```
+
+이 함수는 _f_ 와 _g_ 가 binding 되는것을 기억하는 **closure**를 생성한다.  
+이 함수의 type은 다음과 같다고 추정할 수 있다.  
+```haskell
+f: 'a->'b  
+g: 'c->'a  
+fn : ('a->'b) * ('c->'a) -> ('c->'b)  
+```
+그러나 실제로 REPL은 다음과 같이 evaluate한다.  
+```haskell
+fn : ('a->'b) * ('c->'a) ->'c->'b  
+```
+
+ML 표준 라이브러리는 **infix operator**를 ∘로 표기한다  
+nested function을 다음과 같이 표시할 수 있다.  
+```haskell
+fun sqrt_of_abs i = Math.sqrt(Real.fromInt(abs i))  
+fun sqrt_of_abs i = (Math.sqrt ∘ Real.fromInt ∘ abs) i  
+val sqrt_of_abs i = Math.sqrt ∘ Real.fromInt ∘ abs  
+```
+
+3번째 표현이 가장 좋은 표현이다.  
+
+이 3번째 표현을 계산할때 우리는 오른쪽에서 왼쪽방향으로 합성한다.  
+즉, 다음과 같은 순서로 계산된다.  
+1. _abs_ 를 통해 절댓값을 얻는다.  
+2. _Real.fromInt_ 를 통해 실수로 변환한다.  
+3. _Math.sqrt_ 를 통해 루트값을 얻는다.  
+
+이런 함수의 Pipeline은 functional programming에서 일반적이며,  
+많은 프로그래머들이 **오른쪽→왼쪽 방향**을 선호한다.  
+
+.
+
+
+그러나 우리만의 **infix operator**를 만들어 연산의 진행방향을 바꿀 수 있다.  
+다음은 **F#** 이라는 언어에서인기있는 **infix** 기호에 대한 예시이다.  
+```haskell
+infix |>  
+fun x |> f = f x  
+
+fun sqrt_of_abs i =  
+    i |> abs |> Real.fromInt |> Math.sqrt  
+```
+infix 기호 |>는 내 맘대로 만들어서 바꾸어도 된다.  
+<|> , !|!, << , >> , ...  
+
+심지어 기존에 이미 존재하는 +나 -도 사용가능하다.  
+(다만 기존의 operator을 새로 정의해버리면 이전 기능은 사용할 수 없다.)  
+
+
+.
+
+이런 복잡한 **Higher-order function**들의 type-checking은   
+각 함수들이 무슨 역할인지와 input, output이 무엇인지를 보고 힌트를 얻을 수 있다.  
+
+다음 _backup_ 함수의 type을 추론해보자.  
+```haskell
+fun backup (f,g) =  
+    fn x => case f x of  
+                NONE    => g x  
+             |  SOME y  => y  
+```
+
+위 함수의 type은 다음과 같다.  
+```haskell
+val backup = fn : ('a -> 'b option) * ('a -> 'b) -> 'a -> 'b  
+```
+
+각 기호의 의미는 다음과 같다.  
+```haskell
+(f의 input -> f의 output)*(g의 input->g의 output) -> (ananymouse 함수의 input) -> (g의 output 혹은 y)  
+```
+
+.
+
+
+이번엔 backdown 함수의 type을 추론해보자.  
+```haskell
+fun backdown (f,g,t) =  
+    fn (x,y) => case f (g x) of  
+                    NONE => valOf y  
+                 |  SOME z => t x  
+```
+
+직접 해보고 정답을 보기 바란다.  
+
+위 함수의 type은 다음과 같다.  
+```haskell
+val backdown = fn :  ('a -> 'b option) * ('c -> 'a) * ('c -> 'd) -> 'c * 'd option -> 'd  
+```
+
+.
+
+.
+
+
+
+# 2. Currying  
+
+ML의 모든 함수는 **단 한개**의 argument만 갖는다.  
+f (x,y)는 argument가 두개가 아니라 (x,y)라는 tuple 한 개이다.  
+
+하지만 function을 연달아 붙여놓아 argument를 연달아 받게 하는 방법도 있다.  
+(정확히는 연달아 받는 것처럼 보이게 하는 것이다.)  
+
+이것이 지금부터 소개할 **Currying**이라는 개념이다.  
+(카레의 그 curry가 아니라, 유명한 미국의 수학자 Haskell Curry의 이름을 딴 단어이다.)  
+
+.
+
+
+
+**Currying**은 다중 인수를 취하는 함수의 evaluation을 각각 단일 argument마다 일련의 함수를 evaluation 하게 만드는 기법이이다.  
+다시 말해, n개의 인자를 받는 (tuple의 형태로) 한 개의 함수를 1개의 인자를 받는 n개의 함수로 분리하는 기법이다. 
+
+감이 잘 안온다면, 다음 sorted 함수를 보자.  
+```haskell
+val sorted = fn x => (fn y => (fn z => z>=y andalso y>=x))  
+val t1 = ((sorted 7) 9) 11  
+```
+
+_t1_ 에 binding할 expression evaluation은 다음과 같은 순서로 진행된다.  
+
+>**1.**  sorted 7을 호출했을 때 다음 closure을 반환한다.  
+- Code : fn y => fn z => z >= y andalso y>=x  
+- Environment : x를 7에 map한다.  
+
+>**2.**  9를 인자로 위의 closure을 호출하면 또 다른 closure을 반환한다.  
+- Code : fn z => z >= y andalso y>=x  
+- Environment : x를 7에 map하고, y를 9에 map한다.  
+
+>**3.** 11을 인자로 위의 closure을 호출하면 true를 반환한다.  
+
+즉, 이 sorted함수는 다음과 같은 type을 갖고 있다.  
+```haskell
+val sorted = fn : int -> int -> int -> bool  
+```
+
+그런데 저런식으로 함수를 선언하고 호출하면 번거롭다.  
+**Syntactic sugar**을 통해 문법을 간소화 해보자.  
+
+.
+
+
+#### Caller  
+일반적으로 _e1 e2 e3 e4_ 는  
+_((e1 e2) e3) e4)_와 같은 의미이다. (_(e1 e2 e3 e4)_ 와는 다르다)  
+
+즉, _((sorted 7) 9) 11_ 는  
+_sorted 7 9 11_ 로 써도 된다는 뜻이다. (_sorted(7 9 11)_ 과는 의미가 다르다!)  
+
+.
+
+#### Callee  
+일반적으로 _fun f p1 p2 p3 = e_ 는  
+_fun f p1 = fn p2 => fn p3 => e_ 와 같은 의미이다.  
+
+즉, val sorted = fn x => fn y => fn z => ... 는  
+val sorted x y z = Expression 으로 써도 된다는 뜻이다.  
+
+결국   
+```haskell
+val sorted = fn x => (fn y => (fn z => z>=y andalso y>=x))  
+val t1 = ((sorted 7) 9) 11  
+```
+위와 같은 표현은 간결하게 다음과 같이 쓸 수 있다.  
+
+```haskell
+val sorted x y z = z>=y andalso y>=x  
+val t1 = sorted 7 9 11  
+```
+
+.
+
+
+### 2-1 Currying을 왜 쓸까? 
+
+_"argument의 형태만 다를뿐인데 tuple을 이용하는 일반적인 function대신 Currying을 왜 쓸까?_"  
+라는 의문이 들 수도 있다. 
+
+그 답은 **Closure**의 유용함에 있다. 
+
+예시로 썼던 sorted함수를 다시 들고와보자.  
+```haskell
+fun sorted x y z = z>=y andalso y>=x 
+fun sorted (x,y,z) = z>=y andalso y>=x 
+```
+
+위는 **curried function**인 _sorted_ 이고  
+아래는 일반 함수 _sorted_ 이다. 
+
+이 상태로는 차이가 없어보이지만 이들을 사용하는 방식에서 차이가 난다.  
+일반 sorted함수는 x,y,z값이 모두 있어야 함수를 호출할 수 있다. 
+
+그러나,  
+currying상태에서는 인자가 3개가 없어도 함수를 호출할 수 있다.  
+그이유는 인자가 부족하면 함수는 **closure**을 반환하기 때문이다. 
+
+예를들어 다음과 같이 사용할 수 있다. 
+```haskell
+val x_get = sorted 3 
+val y_get = x_get 4 
+val z_get = y_get 7 
+```
+
+결과는 다음과 같이 나온다. 
+```haskell
+val x_get = fn : int -> int -> bool 
+val y_get = fn : int -> bool 
+val z_get = true : bool 
+```
+
+*x\_get* 는 **closure**로 **pair**상태는 다음과 같다. 
+- Code : _y,z_ 를 인자로 받아 _x>=y andalso y>=x_를 연산한다. (_y,z_ 를 한꺼번에 받는다는 뜻이 아니다.) 
+- Environment : x를 3에 map한다. 
+
+마찬가지로 *y\_get*는 **closure**로 **pair**상태는 다음과 같다. 
+- Code : _z_ 를 인자로 받아 _x>=y andalso y>=x_를 연산한다. 
+- Environment : _x_ 를 3에 map한다. _y_ 를 4에 map한다. 
+
+
+.
+
+>**Currying**에서 여러개의 인자를 가진 함수를 호출 할 경우,  
+>파라미터의 수보다 적은 수의 파라미터를 인자로 받으면 누락된 파라미터를 인자로 받게 할 수 있다. 
+
+>다시 말해,  
+>필요 parameter 인자보다 적은 수의 parameter를 받으면  
+**closure**상태로 parameter를 기다리다가 부족한 인자를 parameter로 받게 한다는 말이다. 
+
+
+이것을 **"Partial application"**이라고 한다.  
+단, **Partial application**과 currying은 같은 개념이 아니므로 주의하자. 
+
+.
+
+
+
+연습을 위해 이전 게시물에서 배웠던 fold를 currying을 이용해 표현해 보자.  
+```haskell
+fun fold f acc xs = 
+    case xs of 
+        []      => acc 
+      | x::xs'  => fold f (f(acc,x)) xs' 
+
+fun sum_inferior xs = fold (fn (x,y) => x+y) 0 xs 
+val sum = fold (fn (x,y) => x+y) 0 
+```
+
+*sum\_inferior* 함수와 *sum* 변수는 같은 역할이다. 
+사용법이 다음과 같이 동일하다는 뜻이다. 
+```haskell
+val xl = [3,4,5] 
+
+val result1 = sum_inferior xl 
+val result2 = sum xl 
+```
+
+_result1_ 과 _result2_ 둘 다 값은 12이다. 
+
+하지만,  
+이름에서 알 수 있듯이 함수형태로 만들어두는것보다  
+val을 이용한 변수형태로 만드는것이 좀 더 좋은 스타일이다. 
+
+function으로 만드는 것은 불필요하게 함수를 한 번 더 감싸는 형태이기 때문이다. 
+
+.  
+.
+
+### 2-2 Iterators 
+
+Partial application은 반복문 형태의(iterator-like) 함수들에 특히 유용하다.  
+다음 예시를 보자  
+```haskell
+fun exists predicate xs = 
+    case xs of 
+        []  => false 
+      | x::xs' => predicate x orelse exists predicate xs' 
+
+val no = exists (fn x => x=7) [4,11,23] 
+val hasZero = exists (fn x => x=0) 
+```
+_exists_는 _predicate_가 참이되게 하는 element가 있는지 확인하는 함수이다.  
+_no_ 처럼 한번에 인자를 넣어서 바로 결과를 얻을수도 있지만,  
+_hasZero_ 처럼 **partial applicated function**으로 만들어두었다가 나중에 사용할 수도 있다.  
+
+이런 이유로 이런형태의 ML 라이브러리 함수는 대체로 **currying function**이다. 
+예> List.map, List.filter, List.foldl 
+
+.  
+.
+
+### 2-3 Curry/Uncurry 
+
+일반 함수와 curry함수 사이의 변환을 하고 싶다거나, 
+curry 함수의 인자 순서를 바꾸고 싶다면 어떻게 할까? 
+
+다음의 예제가 그 답을 제시한다. 
+```haskell
+fun other_curry1 f = fn x => fn y => f y x 
+fun other_curry2 f x y = f y x 
+fun curry f x y = f (x,y) 
+fun uncurry f (x,y) = f x y 
+```
+
+각 함수의 type은 다음과 같다.  
+이유는 직접 고민해보자. 
+```haskell
+val other_curry1 = fn : ('a -> 'b -> 'c) -> 'b -> 'a -> 'c 
+val other_curry2 = fn : ('a -> 'b -> 'c) -> 'b -> 'a -> 'c 
+val curry = fn : ('a * 'b -> 'c) -> 'a -> 'b -> 'c 
+val uncurry = fn : ('a -> 'b -> 'c) -> 'a * 'b -> 'c 
+```
+.  
+.
+### 2-4 Efficient 
+tuple을 이용한 함수나 currying 함수중 어느것이 더 빠를까? 
+
+둘다 constant 시간이 들기 때문에 별로 차이가 없다. 
+
+다만, SML/NJ에서는 tuple을 좀 더 효율적으로 다루고 
+다른 함수형 언어인 OCaml, F#, Haskell에서는 currying이 더 빠르다. 
+
+.
+
+.
+
+
+# 3. Reference  
+
+ML에서 기본적으로 한번 binding된 변수는 수정이 불가능하다.  
+그 이유는 동치 연산자인 **'='**의 쓰임이 다르기 때문이다.  
+
+```haskell
+val i = 3;  
+(* val i = 3 : int *)  
+i = 5;  
+(* val it = false : bool *)  
+```
+처음에는 _i_ 에 3을 binding하는 의미로 **'='**가 쓰였지만,  
+두번째에서는 _true/false_ 를 판단하는 (다른 언어에서 '==') 의미로 쓰였다.  
+즉, 두번째에서 **'='**는 _i_ 에 3을 binding하는 의미로 쓰이지 않았다는 뜻이다.  
+
+이 때문에 _i_ 라는 이름으로 다른 값을 쓰고 싶다면 새로 정의를 해야한다.  
+```haskell
+val i = 3;  
+(* val i = 3 : int *)  
+val i = 4;  
+(* val i = 4 : int *)  
+```
+
+물론 ML에서는 **immutable**하기 때문에  
+정확히 말하면 이전의 _i_ 를 **shadowing** 하는 것이다.  
+
+ML에도 pointer와 비슷한 개념이 존재한다.  
+바로 **ref type**이다.  
+
+- ref e : e을 초기값으로 하는 참조를 생성한다.  
+- e1 := e2 e1의 내용을 e2의 내용으로 변경한다.(update)  
+- !e e에 있는 값을 불러온다.  
+
+.
+
+ref에 대한 예시에 앞서, 다음 예시를 보자.  
+```haskell
+(*1*) val x = 3  
+(*2*) val y = 4  
+(*3*) val z = x  
+(*4*) val x = 5  
+(*5*) val w = y+z  
+```
+
+_z_ 에 _x_ 를 대입했을 때 단순히 값의 복사만 일어났으므로  
+4번째줄에서 _x_ 에 5를 새로 binding해도 _z_ 의 값은 그대로 3을 유지한다.  
+따라서 _w_ 의 값은 7이된다.  
+
+이번엔 ref를 이용한 다음 예제를 보자.  
+```haskell
+(*1*)val x = ref 3  
+(*2*)val y = ref 4  
+(*3*)val z = x  
+(*4*)val _ = x := 5  
+(*5*)val w = (!y) + (!z)  
+```
+![reference](https://bleetoteelb.github.io/assets/img/reference.JPG)
+_x_ 는 **ref type**이기때문에  
+_z_ 에 _x_ 를 대입할때 _x_ 의 ref를 복사한다(_x_ 의 값이 들어있는 주소)  
+때문에 4번째줄에서 _x_ 를 5로 update를 하면,  
+같은 곳을 참조하고 있는 z의 값 역시 5가 된다.  
+따라서 _w_ 의 값은 9이다.  
+
+_x_ 와 _z_ 는 같은 곳을 참조하고 있기 때문에 _x_ 대신 _z_ 를 update해도  
+_x_ 와 _z_ 가 참조값이 동시에 변한다.
+
+
+
+**ref type** 사용의 주의점을 몇가지 소개한다.  
+>**1.**
+이 방법은 _x_가 참조하고 있는 곳의 값을 바꿀수 있는곳이지,   
+여전히 immutable하기 때문에 _x_ 의 참조하는 곳 자체를 바꾸기 위해서는 새로 binding을 해야한다. 
+
+>**2.** 
+reference는 **first-class value**이다.  
+즉, 변수가 들어갈 수 있는 자리에는 어디든지 사용할 수 있다.(argument 등)  
+
+>**3.** 
+_x,y,z_는 _int ref type_이므로  
+주소값의 수식연산이 가능한 다른 언어들과 다르게  
+_x+1, y+4_ 와 같은 연산은 불가능하다.  
+(C++에서는 x가 array 였을때 x+4과 같은 형식으로 x[1]을 얻어낼 수 있다)  
+
+### 원인은 몰라
+
+ref에 관련해서 재밌는 현상을 한가지 소개하려고 한다. 
+```haskell
+val name1 = ref "hi" 
+fun third() = 
+    name1 
+
+fun fourth() = 
+    let val _ = name1 := "bye" 
+    in  third() 
+    end 
+
+val result1 = third() 
+```
+
+위 코드에서 각 function과 val의 값은 무엇이 될까? 
+```haskell
+val name1 = ref "hi" : string ref 
+val third = fn : unit -> string ref 
+val fourth = fn : unit -> string ref 
+val result1 = ref "hi" : string ref 
+```
+생각했던 답이 나왔는가? 
+
+그럼 이번엔 다음과 같이 fourth를 호출하는 함수를 추가해보겠다. 
+```haskell
+val name1 = ref "hi" 
+fun third() = 
+    name1 
+
+fun fourth() = 
+    let val _ = name1 := "bye" 
+    in  third() 
+    end 
+    
+val result1 = third() 
+val result2 = fourth() 
+```
+
+이번엔 각 function과 val의 값은 무엇이 될까? 
+```haskell
+val name1 = ref "bye" : string ref 
+val third = fn : unit -> string ref 
+val fourth = fn : unit -> string ref 
+val result1 = ref "bye" : string ref 
+val result2 = ref "bye" : string ref 
+```
+
+놀랍게도 _fourth_ 를 호출하기 전이었음에도 _name1_ 과 _result1_ 이 모두 "bye"가 되었다. 
+
+정확한 이유는 모르지만 가장 처음 게시물인 **[programming language1](https://bleetoteelb.github.io/devlog/2018/03/10/pl-1/)** 에서 설명했던  
+**binding time**과 관련이 있다고 추정이 된다. 
+
+실행 후 **Static binding**을 하는 **Load time**에서 _fourth_ 를 읽으면서 이미 _name1_ 의 reference값을 "bye"로 바꾸지 않았을까. 
+
+.
+
+.
+
+
+
+# 4. Callback 
+
+몇몇의 경우에는 _mutable data structure_ 가 허용된다. 
+변수의 상태가 변경되는것이 적절한 모델일때가 그 경우이다. 
+ 
+원래 **callback**은 다른 코드의 인수로서 넘겨주는 실행 가능한 코드를 말한다.  
+콜백을 넘겨받는 코드는 이 콜백을 필요에 따라 즉시 실행할 수도 있고, 아니면 나중에 실행할 수도 있다. 
+
+.
+
+callback에 대해 자세히 설명하려면 다른 과목의 개념까지 다 끌고와야 하므로  
+예시 하나를 통해 간단히 설명하고 넘어가고자 한다.
+
+가령 다음과 같은 상황이다. 
+
+
+
+### 4-1 파일 읽기 
+프로그램 중간에 파일을 읽는 코드가 삽입된다면 다음과 같은 2가지 방법을 선택할 수 있다. 
+
+
+>1. 파일을 모두 읽은 후 다음 코드로 진행. 
+>2. 파일을 읽도록 요청하고 일단 다음 코드로 진행. 파일이 모두 읽어지면 (callback을 받으면) 관련된 코드를 진행. 
+
+예를들어 "hello"가 적혀있는 input.txt가 있다고 가정하자. 
+그러면 1번과 같은 코드는 다음과 같다. 
+```javascript
+var data = fs.readFileSync('input.txt'); 
+
+console.log(data.toString()); 
+console.log("Program has ended"); 
+```
+
+**javascript**로 작성된 코드이지만 간단하므로 이해할 수 있으리라 생각한다.  
+(console.log는 print와 비슷하다고 생각하면 된다)  
+
+
+첫번째 줄에서 input.txt의 파일을 읽어서 data에 저장하고 다음 코드를 진행하게 된다. 
+결과는 
+```
+hello 
+Program has ended 
+```
+가 될것이다. 
+
+.  
+.
+
+그러면 2번과 같은 코드는 어떻게 될까 
+```javascript
+fs.readFile('input.txt', function (err, data) { 
+    console.log(data.toString()); 
+}); 
+
+console.log("Program has ended"); 
+```
+input.txt라는 파일을 읽어서 그 내용을 data에 입력하는,  
+즉 **callback**이 data로 저장된다. 
+
+하지만 이 경우에는 input.txt를 읽는것을 기다리지 않고 바로 다음 코드로 넘어가기 때문에 결과는 다음과 같다. 
+```
+Program has ended 
+hello 
+```
+
+다음 코드로 넘어가서 실행을 하고 있다가  
+**callback**이 와서 data에 저장되면 그제서야 내부에 있는 data가 출력되는 것이다. 
+
+.  
+.
+
+### 4-2 키보드 입력시 실행하는 함수 
+
+게임과 같은 프로그램에서는 특정 키를 입력했을 때, 
+특정 함수가 실행하도록 구성되어있다. 
+
+예를들어 메이플 스토리를 하고 있을 때 
+몬스터가 움직이는 영상을 재생하면서 
+앞으로 가는 →를 누르면 캐릭터가 앞으로 가는 함수를 동시에 실행해야 한다. 
+이 때 프로그램은 키보드 입력에 따라 수행해야 하는 callback 함수를 받는것을 대기하고 있다. 
+
+
+
+특정 키를 눌렀을 때 실행할 함수를 담아두는 list를 만드려고 한다. 
+그 코드는 다음과 같다. 
+```haskell
+val cbs : (int -> unit) list ref = ref [] 
+
+fun onKeyEvent f = cbs := f :: (!cbs) 
+
+fun onEvent i = 
+    let fun loop fs = 
+            case fs of 
+                []      => () 
+              | f::fs'  => (f i; loop fs') 
+    in loop (!cbs) end 
+```
+
+_cbs_ 는 특정 키를 눌렀을 때 수행할 함수들의 list이다.  
+**callback function**은 _(int->unit) type_을 갖고 있다.  
+
+_i_ 를 누르면 loop를 돌면서 cbs 안에 있는 모든 함수를 실행한다.  
+case의 두번째 branch에서 **(f i;loop fs')**는 _f i_ 를 실행하고 _loop fs'_를 실행하라는 뜻이다. 
+.
+
+여기서 각 fun의 type들을 한 번씩 확인하고 넘어가자. 
+```haskell
+val onKeyEvent = fn : (int -> unit) -> unit 
+val onEvent = fn : int -> unit 
+```
+_onKeyEvent_ 는 **callback** 함수(int->unit)을 받아서 _unit_ 을 반환한다. 
+
+.  
+.
+
+**callback function**들의 예제들이다.  
+**Clients**들은 다음과 같이 _cbs_ 에 **callback function**에 등록함으로써 본인들이 관심있는 것들이 입력되었는지를 확인할 수 있다. 
+```haskell
+val timesPressed = ref 0 
+val _ = onKeyEvent (fn _ => timesPressed := (!timesPressed) +1) 
+
+fun printIfPressed i = 
+    onKeyEvent (fn j => 
+        if i=j 
+        then print ("pressed " ^ Int.toString i) 
+        else ()) 
+```
+처음 들어간 **callback function**은 키보드가 한 번 눌릴 때마다 숫자가 한번씩 증가한다.  
+두번째 들어간 함수는 반응할 key값을 등록하는 함수이다. 
+
+예를들어 
+```haskell
+val _ = printIfPressed 1 
+val _ = printIfPressed 3 
+val _ = printIfPressed 5 
+```
+위 코드를 통해 cbs에 등록했다면 1,3,5를 눌렀을 때만 "pressed *"이 출력될것이다. 
+(이해를 돕기 위해 이렇게 설명했으나, 실제로는 각 숫자들은 키보드의 값들과 대응되어있을것이다. 1:'q', 2:'w' 등...) 
