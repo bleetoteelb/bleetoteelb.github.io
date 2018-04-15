@@ -1,0 +1,301 @@
+---
+layout: post
+title:  "Programming Language 5"
+subtitle:   "Programming Language 5"
+categories: devlog
+tags: pl
+---
+More Datatypes and Pattern-Matching  
+
+# 0. datatype vs record  
+저번 게시글에서 새로운 datatype을 만드는 방법을 알아보았다.  
+
+이 개념을 통해 우리가 필요한 어떤 유형도 만들어낼 수 있다.
+```haskell
+datatype suit = Club | Diamond | Heart | Spade  
+datatype card_value = Jack | Queen | King | Ace | Num of int  
+```
+
+혹은 id를 저장하는 datatype도 만들 수 있다.  
+```haskell
+datatype id = StudentNum of int  
+            | Name of string * (string option) * string  
+```
+가운데가 _string option_ 인 이유는,  
+가운데 이름이 없는 사람도 있을 수 있기 때문이다.  
+(물론 내용은 외국에서 온것이지만, '김진'과 같은 경우를 생각하면 될 것 같다)  
+
+.
+
+물론 우리는 id를 저장하는 **record**를 만들수도 있다.  
+```haskell
+{ student_num : int,  
+  first : string,  
+  middle : string option,  
+  last : string }  
+```
+
+하지만 모든 요소를 다 입력해야 하기때문에 좋은 style은 아니다.  
+**"one of"** type을 이용할 수 있을 때,  
+**"each of"** type을 쓰는 선택은 별로 좋지 않다. 
+
+또한 _student_num_ 가 없을경우에 보통 -1 과 같은 숫자로 없음을 판별하는데,  
+그보다는 다음과 같은 **option** type을 이용하는것이 조금 더 나을 수 있다. 
+```haskell
+{ student_num : int option  
+  first : string  
+  middle : string option  
+  last : string } 
+```
+
+# 1. Expression Trees 
+
+저번 게시글에서 **building block**을 구성하는 방법 중 **"Self reference"**를 기억하는가? 
+이번에는 **self referenc**e를 이용한 datatype을 구성해 보겠다. 
+```haskell
+datatype exp = Constant of int 
+             | Negate   of exp 
+             | Add      of exp * exp 
+             | Multiply of exp * exp 
+```
+
+_Negate, Add, Multiply_ construtor의 type에** self reference**인 _exp_ 가 쓰였다. 
+위 datatype은 다음과 같이 사용한다. 
+```haskell
+Add (Constant (10+9), Negate (Constant 4)) 
+```
+
+위 expression을 도식화 하면 다음과 같다.   
+>.......┌─ Constant ─ 19   
+>Add |   
+>.......└─ Negate ─ Constant ─ 4   
+
+이것을 **Expression tree**라고 하는데 
+이 **tree**의 **leaf**부터 차례로 계산하면 된다. 
+
+
+이런 **self reference** type은 **case-expression & pattern matching**에서 **recursion**을 쓰게 된다.  
+다음은 _exp_ type의 **case-expression & pattern matching**이다. 
+```haskell
+fun eval e = 
+    case e of 
+        Constant i      => i 
+      | Negate e2       => ~ (eval e2) 
+      | Add(e1,e2)      => (eval e1) + (eval e2) 
+      | Multiply(e1,e2) => (eval e1) * (eval e2) 
+```
+
+각 branch의 우변은 예시일 뿐   
+Constructor에 구애받지 않고 자유롭게 변경할 수 있다.  
+```haskell
+fun number_of_adds e = 
+    case e of 
+        Constant i      => 0 
+      | Negate e2       => number_of_adds e2 
+      | Add(e1,e2)      => 1 + number_of_adds e1 + number_of_adds e2 
+      | Multiply(e1,e2) => number_of_adds e1 + number_of_adds e2 
+
+val example_exp : exp = Add (Constant 19, Negate(Constant 4)) 
+val example_addcount = number_of_adds(Multiply(example_exp,example_exp)) 
+```
+
+이때 *example\_addcount*의 값은 얼마가 될까?  
+답은 2이다. 
+
+# 2. Datatype bindings 
+
+## 2-1 Datatype 분석 
+다음과 같은 _t_ type 이 있다고 하자. 
+```haskell
+datatyep t = C1 of t1 | C2 of t2 | ... | Cn of tn 
+```
+프로그램은 type _t_ 와 _(ti->t)_ type인 constructor _ci_ 를 environment에 추가한다.  
+이 type을 사용할때는 _ci v_ 로 사용한다. (반드시 **tag**인 _ci_ 를 함께 써야한다) 
+
+**"of t"**를 제거하고 _Ci_ 만 써도 된다.  
+이때 _Ci_ 는 _t_ type이다.(Constant) 
+
+.  
+.
+
+주어진 임의의 type t의 expression에 대해 **case expression**을 작성하려면  
+다음의 2가지 점을 체크하면 된다. 
+>1. 어떤 tag(Constructor)가 있는지. 
+>2. 추출해야하는 기저의 data가 무엇인지. 
+ 
+.  
+. 
+## 2-2 Case-expression 분석 
+
+일반적으로 **case expression**은 expression이 사용되는 곳이면 어디든지 쓸 수 있다.  
+지금까지 사용된것처럼 **case expression**이 function body 전체를 차지하고 있을 필요는 없다는 뜻이다. 
+
+
+다음과 같은 case-expression이 있다고 하자 
+```haskell
+case e of p1 => e1 | p2 => e2 | ... | pn => en 
+```
+
+그러면 _expression e_ 는 _value v_ 로 evaluate된다.  
+만약 _pi_ 가 _v_ 에 match되는 첫번째 **pattern**이라면,  
+그 결과는 _ei_ 의 evaluation 결과가 될것이다. 
+그리고 matching으로 인해 environment가 확장된다. 
+
+**pattern** _Ci(x1,...,xn)_ 이 _Ci(v1,...,vn)_ 에 match된다면,  
+environment에 _x1 to v1, ... xn to vn_ 을 포함하도록 확장된다. 
+
+.  
+.
+## 2-3 Recursive datatype 
+**Datatype binding** 역시 recursive 구조로 표현될 수 있다. 
+```haskell
+datatype my_int_list = Empty 
+                     | Cons of int * my_int_list 
+
+val x = Cons(4,Cons(23,Cons(2008,Empty))) 
+
+fun append_my_list (xs,ys) = 
+    case xs of 
+        Empty => ys 
+      | Cons(x,xs') => Cons(x, append_my_list(xs',ys)) 
+```
+*append\_my\_list*는 변수 _x_에 _Empty_ 가 있는 부분에 
+새로운 *my\_int\_list* type인 _ys_ 를 넣어준다. 
+
+.
+
+예를들어 다음과 같이 사용하면 *eval\_x*의 값은 어떻게 될까? 
+```haskell
+val eval_x = append_my_list(x,Cons(2,Empty)) 
+```
+결과는 
+```haskell
+val x = Cons(4,Cons(23,Cons(2008,Cons(2,Empty)))) : my_int_list 
+```
+.  
+.
+## 2-4 여러 datatypes와 pattern-matching 
+
+이미 알다시피 **Options** 과 **Lists** 역시 datatype이다. 
+이 때 **NONE,SOME, [], ::** 모두 constructor이다. 
+
+**pattern-mathcing**을 이용하면 
+**optio**n과 **list**의 data에 접근할 때 쓰던 
+**valOf, isSome, tl, hd** 등등을 쓸 필요가 없다. 
+
+.
+
+다음 예시코드를 보자.
+```haskell
+fun inc_or_zero intoption = 
+    case intoption of 
+        NONE => 0 
+      | SOME i => i+1 
+
+fun sum_list xs = 
+    case xs of 
+        [] => 0 
+      | x::xs' => x+sum_list xs' 
+
+val sample_option = inc_or_zero(SOME 3) 
+val sample_list = sum_list([1,2,3,4,5]) 
+```
+
+간단하지만 *sample\_option*과 *sample\_list*의 값은 얼마가 될까? 
+답은 4,15이다. 
+
+.  
+.
+
+**option**과 **list**에 접근할 때는 **Pattern-matching**을 사용하는 것이 더 낫다.  
+그 이유는 이전에도 말했지만,  
+놓치는 경우의 수가 없고, 잘못된 변수에 대한 예외를 차단해주기 때문이다. 
+
+.
+
+물론 _null_ 이나 _tl_ 과 같은 이미 정의된 것들을 써도 크게 상관은 없다.  
+때때로 이들이 더 편리하고, 다른 함수에 인자로 넘길때 유용하기 때문이다.  
+선택은 여러분의 몫이다. 
+
+.
+
+.
+
+
+# 3. Pattern-matching의 확장 
+
+지금까지 **pattern-matching**에 **"one of"** type만들 사용해 왔다. 
+
+그러나 **each of** type인 **records**나 **tuples**에도 사용 가능하다.  
+ 
+_(x1,...,xn)_ pattern은 _(v1,...,vn)_ value에 match된다.  
+_{f1=x1,...,fn=xn}_ 은 _{f1=v1,...,fn=vn}_ value에 match된다. 
+
+
+가령 다음과 같은 형태이다. 
+```haskell
+fun sum_triple triple = 
+    case triple of 
+        (x,y,z) => x+y+z 
+fun full_name r = 
+    case r of 
+        {first=x,middle=y,last=z} => x^y^z 
+```
+.
+
+**Pattern-matching**을 하는 예시를 들기 위해 위와 같이 썼지만,  
+case branch가 하나만 있을 때 **case-expression**을 쓰는것은  
+그다지 좋은 선택은 아니다. 
+
+
+더 나은 코드로 바꾸기 위해  
+**val-binding** 역시 **pattern matching** 이라는 성질을 이용해보자 
+```haskell
+fun sum_triple triple = 
+    let val (x,y,z) = triple 
+    in x+y+z 
+    end 
+
+fun full_name r = 
+    let val {first=x,middle=y,last=z} = r 
+    in x^y^z 
+    end 
+```
+variable을 binding할때 **pattern matching**을 이용해 **분할 binding**을 할 수 있다.  
+만약 인자로 들어오는 _triple_ 과 _r_ 이  
+_(x,y,z)_ 형태가 아니거나 _{first=x,middle=y,last=z}_ 가 아닐경우에  
+프로그램은 _exception_ 을 _raise_ 할 것이다.  
+
+.
+
+
+조금 더 나은 코드로 한번 더 바꾸어보자. 
+ML에서 모든 함수는 무조건 단 한개의 argument만 받을 수 있다. 
+
+_fun f (a,b,c)_ 라고 써있을지라도 
+_f_ 는 _(a,b,c)_ 라는 **tuple**의 형태로 1개의 argument만 받는것이다. 
+
+다시말해 함수의 argument 역시 **pattern**이고, 
+우리는 **pattern matching**을 적용시킬 수 있다. 
+
+즉, 이를 이용해 위 코드를 더 훌륭하게 바꿀 수 있다. 
+
+```haskell
+fun sum_triple(x,y,z) = 
+    x+y+z 
+fun full_name {first=x,middle=y,last=z} = 
+    x^y^z 
+```
+
+---
+
+### <참고1> 
+argument의 **pattern matching**을 이용해 다음과 같은 유용하고 재밌는 함수들을 만들 수 있다.  
+```haskell
+fun rotate_left (x,y,z) = (y,z,x) 
+fun rotate_right t = rotate_left(rotate_left t) 
+```
+
+### <참고2> 
+아무 argument도 받지 않는 **"Zero arguments"**는 **unit pattern ()**이다.  
+이는 **unit value ()**에 matching된다. 
