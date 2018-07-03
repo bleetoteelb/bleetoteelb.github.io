@@ -35,3 +35,32 @@ $git remote add origin [ github clone URL ]
 ```
 
 __6__.. Push the changes to Github (현재까지의 상태를 Push한다.)
+
+(source: https://comcxx11.github.io/com/add-remote-repository/)
+
+# 2. How to make gitignore file?
+
+_Gitignore_ file is for not to make public my credential information or not to upload unnecessary files.
+_Gitignore_ 파일은 공개하고 싶지 않은 개인 정보가 담긴 파일이나 업로드할 필요가 없는 파일들을 정리해두기 위해 만든다.
+
+If you list up some files you want to except from add list,
+they are automatically excepted.
+이 파일안에 파일 목록을 정리해두면 자동으로 add 리스트에서 빠진다.
+
+
+__1__.. Make a _.gitignore_ file (Or you can set to be generated automatically when a repository is created in github. Find the option when you create repository)
+```
+$vi .gitignore
+```
+__2__.. list up the files according to the following rules
+
+```
+# a comment - this is ignored
+*.a         # ignore .a files
+!lib.a      # but include lib.a, even though it ignore .a files above
+/abc.txt    # only ignore the root abc.txt files, not subdir/abc.txt
+build/      # ignore all files in the build/ directory
+doc/*.txt   # ignore doc/notes.txt, but not doc/sth/num.txt
+```
+
+(source: http://emflant.tistory.com/127)
