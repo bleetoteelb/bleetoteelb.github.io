@@ -59,7 +59,7 @@ datatype exp = Constant of int
              | Multiply of exp * exp 
 ```
 
-_Negate, Add, Multiply_ construtor의 type에** self reference**인 _exp_ 가 쓰였다. 
+_Negate, Add, Multiply_ construtor의 type에 **self reference**인 _exp_ 가 쓰였다. 
 위 datatype은 다음과 같이 사용한다. 
 ```haskell
 Add (Constant (10+9), Negate (Constant 4)) 
