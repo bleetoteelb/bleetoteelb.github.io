@@ -38,13 +38,18 @@ __6__.. Push the changes to Github (현재까지의 상태를 Push한다.)
 
 (source: https://comcxx11.github.io/com/add-remote-repository/)
 
+.
+
+.
+
+
 # 2. How to make gitignore file?
 
-_Gitignore_ file is for not to make public my credential information or not to upload unnecessary files.
+_Gitignore_ file is for not to make public my credential information or not to upload unnecessary files.  
 _Gitignore_ 파일은 공개하고 싶지 않은 개인 정보가 담긴 파일이나 업로드할 필요가 없는 파일들을 정리해두기 위해 만든다.
 
 If you list up some files you want to except from add list,
-they are automatically excepted.
+they are automatically excepted.  
 이 파일안에 파일 목록을 정리해두면 자동으로 add 리스트에서 빠진다.
 
 
@@ -64,3 +69,27 @@ doc/*.txt   # ignore doc/notes.txt, but not doc/sth/num.txt
 ```
 
 (source: http://emflant.tistory.com/127)
+
+
+.
+
+.
+
+
+# 2. Undo git add, commit or push
+
+__1__.. Undo git add
+```
+$git reset
+```
+
+__2__.. Undo git commit
+```
+$git reset HEAD~1
+```
+
+__3__.. Undo git push
+```
+$git reset HEAD~1
+$git push origin <branch> -f
+```
