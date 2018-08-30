@@ -57,3 +57,6 @@ If you want to remove all files of user,
 ```
 $deluser -remove-all-files [user name]
 ```
+
+
+(source: http://mirwebma.tistory.com/112)
