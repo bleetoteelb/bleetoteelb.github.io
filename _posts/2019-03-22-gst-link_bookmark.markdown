@@ -35,5 +35,6 @@ https://wiki.kldp.org/KoreanDoc/html/gcc_and_make/gcc_and_make-3.html
 설명이 잘 되어있는 것 같아서 북마크
 
 문법에 관련돼서도 나중에 조금씩 정리를 해볼예정
+
 https://norux.me/19
 
