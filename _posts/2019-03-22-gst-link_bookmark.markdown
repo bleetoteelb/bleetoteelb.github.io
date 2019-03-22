@@ -21,7 +21,7 @@ tags: gst
 make 파일 문법을 잘 정리되어 있는 것 같아서 북마크.
 나중에 제대로 정리해서 make 관련 되어서도 정리해볼까 생각중
 
-https://wiki.kldp.org/KoreanDoc/html/gcc_and_make/gcc_and_make-3.html
+[make파일 링크](https://wiki.kldp.org/KoreanDoc/html/gcc_and_make/gcc_and_make-3.html)
 
 .
 
@@ -36,5 +36,5 @@ https://wiki.kldp.org/KoreanDoc/html/gcc_and_make/gcc_and_make-3.html
 
 문법에 관련돼서도 나중에 조금씩 정리를 해볼예정
 
-https://norux.me/19
+[가변인자 링크](https://norux.me/19)
 
