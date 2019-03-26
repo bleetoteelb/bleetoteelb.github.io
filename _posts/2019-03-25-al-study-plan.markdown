@@ -63,12 +63,12 @@ TAB는 외부 문제가 들어갈 자리이다.
 
 | 일정       |  문제  | 비고 |
 | :---:      |  :--- | :--- |
-| 2019-03-25 | 유클리드 호제법 <br> [오르막길](https://www.acmicpc.net/problem/2846) | <br>배열|
-| 2019-03-26 | 스마트 에어컨 센서모듈 검증 <br> 마리오 게임<br> [이중 연결 리스트](https://www.acmicpc.net/problem/3045) | <br><br>리스트|
-| 2019-03-27 |  데이터 리오더링<br> LED <br> [좋은 단어](https://www.acmicpc.net/problem/3986) | <br> <br> 스택 |
-| 2019-03-28 |  셀프살균케어 <br> 인터넷 쇼핑몰 제품배치 <br>[프로세서 디자인](https://www.acmicpc.net/problem/3081) | <br> <br> 큐|
-| 2019-03-29 | TBA <br> [문제집](https://www.acmicpc.net/problem/1766) | <br> 힙|
-| 2019-03-30 | 조기 화재진압 시스템 테스트 <br> CCTV 카메라 감시 시야각도 테스트 <br> [전화번호 목록](https://www.acmicpc.net/problem/5052) |<br><br>해시테이블 |
+| 2019-03-25 | 유클리드 호제법 <br> 오르막길 (https://www.acmicpc.net/problem/2846) | <br>배열|
+| 2019-03-26 | 스마트 에어컨 센서모듈 검증 <br> 마리오 게임<br> 이중 연결 리스트 (https://www.acmicpc.net/problem/3045) | <br><br>리스트|
+| 2019-03-27 |  데이터 리오더링<br> LED <br> 좋은 단어 (https://www.acmicpc.net/problem/3986) | <br> <br> 스택 |
+| 2019-03-28 |  셀프살균케어 <br> 인터넷 쇼핑몰 제품배치 <br>프로세서 디자인 (https://www.acmicpc.net/problem/3081) | <br> <br> 큐|
+| 2019-03-29 | TBA <br> 문제집 (https://www.acmicpc.net/problem/1766) | <br> 힙|
+| 2019-03-30 | 조기 화재진압 시스템 테스트 <br> CCTV 카메라 감시 시야각도 테스트 <br> 전화번호 목록 (https://www.acmicpc.net/problem/5052) |<br><br>해시테이블 |
 | 2019-03-31 | <span style="color:#FA5858"><b>보충</b></span> ||
 | 2019-04-01 | 신제품 출시 이벤트 <br> 샘플제품사진 <br> TBA ||
 | 2019-04-02 | 라이브러리 함수의 오류처리 <br> 신도시 <br> TBA||
