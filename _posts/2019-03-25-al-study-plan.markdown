@@ -61,7 +61,7 @@ TBA는 외부 문제가 들어갈 자리이다.
 | :---:      |  :--- | :--- |
 | 2019-03-25 | (10) 유클리드 호제법 <br> 오르막길 (https://www.acmicpc.net/problem/2846) | <br>배열|
 | 2019-03-26 |  (30) 마리오 게임<br> 이중 연결 리스트 (https://www.acmicpc.net/problem/3045) | <br>리스트|
-| 2019-03-27 |  (10) 스마트 에어컨 센서모듈 검증 <br> (10)데이터 리오더링<br>  좋은 단어 (https://www.acmicpc.net/problem/3986) | <br> <br> 스택 |
+| 2019-03-27 |  (10) 스마트 에어컨 센서모듈 검증 <br> (10) 데이터 리오더링<br>  좋은 단어 (https://www.acmicpc.net/problem/3986) | <br> <br> 스택 |
 | 2019-03-28 |  (30) LED <br> 프로세서 디자인 (https://www.acmicpc.net/problem/3081) | <br> 큐|
 | 2019-03-29 | (30) 셀프살균케어 <br> 문제집 (https://www.acmicpc.net/problem/1766) | <br> 힙|
 | 2019-03-30 | (10) 인터넷 쇼핑몰 제품배치 <br> (20) 조기 화재진압 시스템 테스트 <br> (20) CCTV 카메라 감시 시야각도 테스트  | |
@@ -99,3 +99,7 @@ TBA는 외부 문제가 들어갈 자리이다.
 
 
 <span style="color:red;font-weight:bold;font-size:50px">4월에 꼭 붙자!</span>
+
+
+필자의 코드를 볼 수 있는 곳
+https://github.com/bleetoteelb/lg_sw_test
