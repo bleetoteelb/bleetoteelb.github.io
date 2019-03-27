@@ -74,3 +74,16 @@ DVR은 Digital Video Recoder의 약자로 카메라에 잡히는 영상을 비�
 [방어적 프로그래밍 테크닉](https://ryudwig.tistory.com/entry/Code-Craft-Ch1-%EB%B0%A9%EC%96%B4%ED%95%98%EA%B8%B0)
 
 [방어적 프로그래밍](http://statkclee.github.io/xwmooc-sc/novice/python/05-defensive.html)
+
+
+
+# explicit 
+
+C++ 11 이후에 자동 형변환이 된다고 한다.
+처음 알았음..
+
+쓰는 이유는 이해를 했지만, 조금 더 알아보고 정리해야 할 듯
+
+[explicit은 뭘하는 건가요?](https://hashcode.co.kr/questions/325/c%EC%9D%98-explicit-%ED%82%A4%EC%9B%8C%EB%93%9C%EB%8A%94-%EB%AD%98-%ED%95%98%EB%8A%94-%EA%B1%B4%EA%B0%80%EC%9A%94)
+
+[explicit 키워드](https://purestarman.tistory.com/110)
