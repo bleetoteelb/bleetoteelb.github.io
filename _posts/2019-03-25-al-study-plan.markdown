@@ -71,7 +71,7 @@ TBA는 외부 문제가 들어갈 자리이다.
 | 2019-04-03 | (30) 신도시 <br> [징검다리](https://programmers.co.kr/learn/courses/30/lessons/43236) |<br> 이분탐색|
 | 2019-04-04 | (10) 라이브러리 함수의 오류처리 <br> (10) TV 모델 인기도 조사 <br> [K번째수](https://www.acmicpc.net/problem/11004) | <br> <br> 정렬 |
 | 2019-04-05 | (30) 빅데이터 분석 프로그램 구현 <br> [트리의 지름](https://www.acmicpc.net/problem/1967) |<br> 트리순회 |
-| 2019-04-06 | (20) 공기청정기 테스트 <br> (20) 전등 자가진단 로직 테스트 <br> [Z] (https://www.acmicpc.net/problem/1074) | <br> <br> 분할 정복 |
+| 2019-04-06 | (20) 공기청정기 테스트 <br> (20) 전등 자가진단 로직 테스트 <br> [Z](https://www.acmicpc.net/problem/1074) | <br> <br> 분할 정복 |
 | 2019-04-07 | <span style="color:#FA5858"><b>보충</b></span> ||
 | 2019-04-08 | (30) 에어컨 온습도 제어프로그램 <br> TBA ||
 | 2019-04-09 | (10) 통신버퍼 설계 <br> (10) 정수기 성능 측정 <br> TBA ||
