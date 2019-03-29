@@ -87,3 +87,10 @@ C++ 11 이후에 자동 형변환이 된다고 한다.
 [explicit은 뭘하는 건가요?](https://hashcode.co.kr/questions/325/c%EC%9D%98-explicit-%ED%82%A4%EC%9B%8C%EB%93%9C%EB%8A%94-%EB%AD%98-%ED%95%98%EB%8A%94-%EA%B1%B4%EA%B0%80%EC%9A%94)
 
 [explicit 키워드](https://purestarman.tistory.com/110)
+
+
+# stream
+
+[H.264 stream 분석](http://egloos.zum.com/yajino/v/782492)
+
+[기본 스트림](http://www.ktword.co.kr/abbr_view.php?m_temp1=3500)
