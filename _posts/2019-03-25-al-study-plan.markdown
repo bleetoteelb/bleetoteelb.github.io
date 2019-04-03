@@ -57,17 +57,17 @@ TBA는 외부 문제가 들어갈 자리이다.
 
 문제 앞의 숫자는 기출문제 점수배점이다.
 
-| 일정       |  문제  | 비고 |
-| :---:      |  :--- | :--- |
-| 2019-03-25 | (10) 유클리드 호제법 <br> [오르막길](https://www.acmicpc.net/problem/2846) | <br>배열|
-| 2019-03-26 |  (30) 마리오 게임<br> [이중 연결 리스트](https://www.acmicpc.net/problem/3045) | <br>리스트|
-| 2019-03-27 |  (10) 스마트 에어컨 센서모듈 검증 <br> (10) 데이터 리오더링<br>  [좋은 단어](https://www.acmicpc.net/problem/3986) | <br> <br> 스택 |
-| 2019-03-28 |  (30) LED <br>  [프린터 큐](https://www.acmicpc.net/problem/1966) or [프로세서 디자인](https://www.acmicpc.net/problem/3081) | <br> 큐|
-| 2019-03-29 | (30) 셀프살균케어 <br> [문제집](https://www.acmicpc.net/problem/1766) | <br> 힙|
-| 2019-03-30 | (10) 인터넷 쇼핑몰 제품배치 <br> (20) 조기 화재진압 시스템 테스트 <br> (20) CCTV 카메라 감시 시야각도 테스트  | |
+| 일정       |  문제  | 비고 | 체크|
+| :---:      |  :--- | :--- |:--:|
+| 2019-03-25 | (10) 유클리드 호제법 <br> [오르막길](https://www.acmicpc.net/problem/2846) | <br>배열 |v<br>v|
+| 2019-03-26 |  (30) 마리오 게임<br> [이중 연결 리스트](https://www.acmicpc.net/problem/3045) | <br>리스트 |v<br>-|
+| 2019-03-27 |  (10) 스마트 에어컨 센서모듈 검증 <br> (10) 데이터 리오더링<br>  [좋은 단어](https://www.acmicpc.net/problem/3986) | <br> <br> 스택 | v<br>v<br>v|
+| 2019-03-28 |  (30) LED <br>  [프린터 큐](https://www.acmicpc.net/problem/1966) or [프로세서 디자인](https://www.acmicpc.net/problem/3081) | <br> 큐| -<br>-|
+| 2019-03-29 | (30) 셀프살균케어 <br> [문제집](https://www.acmicpc.net/problem/1766) | <br> 힙| -<br>-|
+| 2019-03-30 | (10) 인터넷 쇼핑몰 제품배치 <br> (20) 조기 화재진압 시스템 테스트 <br> (20) CCTV 카메라 감시 시야각도 테스트  | | -<br>v<br>-|
 | 2019-03-31 | <span style="color:#FA5858"><b>보충</b></span> ||
-| 2019-04-01 | (10) 신제품 출시 이벤트 <br> (10) 김치냉장고 최적제어 <br> [전화번호 목록](https://www.acmicpc.net/problem/5052)| <br><br> 해시테이블 |
-| 2019-04-02 | (30) 샘플제품사진 <br> 방어선 (https://www.acmicpc.net/problem/3429) | <br> 이진 검색 트리 |
+| 2019-04-01 | (10) 신제품 출시 이벤트 <br> (10) 김치냉장고 최적제어 <br> [전화번호 목록](https://www.acmicpc.net/problem/5052)| <br><br> 해시테이블 |  v<br>v<br>-|
+| 2019-04-02 | (30) 샘플제품사진 <br> [방어선](https://www.acmicpc.net/problem/3429) | <br> 이진 검색 트리 |
 | 2019-04-03 | (30) 신도시 <br> [징검다리](https://programmers.co.kr/learn/courses/30/lessons/43236) |<br> 이분탐색|
 | 2019-04-04 | (10) 라이브러리 함수의 오류처리 <br> (10) TV 모델 인기도 조사 <br> [K번째수](https://www.acmicpc.net/problem/11004) | <br> <br> 정렬 |
 | 2019-04-05 | (30) 빅데이터 분석 프로그램 구현 <br> [트리의 지름](https://www.acmicpc.net/problem/1967) |<br> 트리순회 |

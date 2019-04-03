@@ -23,6 +23,99 @@ make 파일 문법을 잘 정리되어 있는 것 같아서 북마크.
 
 [make파일 링크](https://wiki.kldp.org/KoreanDoc/html/gcc_and_make/gcc_and_make-3.html)
 
+<details>
+<summary>리눅스 강의 내용</summary>
+<div markdown="1">
+tail –n +숫자 => 숫자에 해당하는 행부터 끝까지 출력  
+tail –n –숫자 -> 숫자에 절대값만큼의 행만 출력  
+전체 프로세스 상태 및 자원 활용량 확인 (ps aux, top)  
+프로세스의 부모/자식 관계 확인 (pstree, ps axjf)  
+프로세스의 상태 확인 (ps aux, cat /proc/[PID]/status, ps axeo pid, stat, comm)  
+
+디렉터리/파일 복사 (cp [option] [원본] [대상파일] or [디렉터리])  
+-a 가능한 원래 파일의 구조와 속성을 그대로 복사  
+-b 복사할 때 덮어쓰게 되는 파일은 백업 생성  
+-d 심볼릭 링크는 심볼릭 링크로 복사  
+-f 복사 위치에 존재하는 파일을 제거하고 복사  
+-i 복사 시 같은 이름의 파일이 존재하면 덮어 쓸 것인가 확인  
+-l 하드링크를 만듦  
+-P 원본파일의 소유자,권한,시간 기록을 그대로 복사  
+-r,-R 파일과 서브 디렉터리에 포함된 모든 파일을 recursive하게 복사  
+-s 디렉터리가 아닌 파일의 심볼릭 링크 만들기  
+-u 파일 정보 갱신  
+-x 다른 파일 시스템인 하위 디렉터리는 무시  
+ 
+디렉터리/파일 이동/이름 바꿈 (mv [option] [원본] [대상파일] or [디렉터리])  
+-b 이동할 파일이 이미 존재한다면 백업파일을 만듦  
+-f 복사 위치에 존재하는 파일을 덮어씀  
+-i 이동 시 같은 이름의 파일이 존재하면 덮어 쓸 것인가 확인  
+-n 이동 시 같은 이름의 파일은 덮어 쓰지 않음  
+-u 파일 정보 갱신  
+
+디렉토리/파일 삭제 -rm [option] [파일명]  
+-f 삭제 할 때 삭제확인을 하지 않음  
+-r 파일과 서브 디렉터리에 포함된 모든 파일을 recursive하게 삭제  
+-i 모든 파일을 삭제하기 전에 확인  
+-I 3개 이상의 파일을 삭제할 때 확인  
+-v 진행상태를 표시함  
+
+파일 관련 명령어 –chmod  
+-c 변경된 결과를 표시함  
+-f 에러 메시지를 표시하지 않음  
+-v 모든 파일에 대한 처리 상황을 표시  
+-R 하위 디렉터리와 파일에 적용  
+
+-rwxrwxrwx 왼쪽부터 파일 소유자의 권한 / 파일 소유자가 속해 있는 그룹의 권한 / 그 이외 모든 사람들의 권한  
+u:owner, g:group, o:other, a:all user  
++권한추가,-권한삭제  
+https://conory.com/blog/19194 < 나중에 다시 읽고 정리  
+
+현재 디렉터리 확인 –pwd  
+디렉터리 내용 출력 –ls [option]  
+-a ‘.’로 시작되는 파일을 포함해 모든 파일을 보여줌  
+-d 현재 디렉터리에 대한 정보 출력   
+-l 각 파일들의 소유자,권한, 갱신일 등 자세한 정보를 보여줌  
+-s 파일이 얼마나 많은 디스크 블록을 차지하고 있는가를 보여줌  
+-t 파일 갱신일 순서로 정렬  
+-u Access한 날짜 순서로 정렬  
+-c i-node가 마지막 바뀐 시간 순서로 정렬  
+-r 정렬된 순서의 역으로 출력  
+-I 파일의 i-node번호를 출력  
+-C 열의 엔트리 출력. 정렬방식을 세로로함  
+-F 파일의 특성 문자를 출력  
+-R Recursive하게 출력->현 디렉터리 뿐 아니라 모든 서브 디렉터리까지 출력  
+
+gcc hello.c  < hello.c 컴파일  
+gcc –o hello hello.c < -o는 hello.c의 컴파일 결과물의 이름을 지정해 줄 때 씀  
+gcc –g hello.c < -g는 실행파일에 디버깅 정보를 저장할 때 씀  
+gcc –l 링크할 라이브러리를 지정  
+gcc –I include 할 헤더파일을 찾을 디렉터리를 지정  
+gcc –L 링크할 라이브러리 파일을 찾을 디렉터리를 지정  
+gcc –c 여러 개의 소스파일을 분할컴파일 하기 위해 오브젝트 파일만 만들 때 사용  
+
+cross compiler  
+hello.c  
+arm-gnueabi-linux-gcc –o hello hello.c < 컴파일러 –x86linux 환경에서 실행됨  
+hello < 컴파일 된 실행파일 – arm linux 환경에서 실행됨  
+
+Make란?  
+프로그램 빌드 자동화 소프트웨어  
+유닉스에서 가장 중요한 도구 중 하나  
+gmake, gnumake가 더 향상된 도구임  
+프로그램의 기능과 구조가 복잡해져 실행파일을 만들기 이ㅜ한 절차와 방법이 복잡해질 경우 Makefile을 이용하여 실행 파일을 만들 수 있도록 하는 명령  
+Makefile / makeifle / GNUMakefile 세 개 파일 중 하나라도 있어야 한다.  
+실행하면 default로 Makefile 또는 makefile이라는 이름의 파일을 찾고, 다른 이름을 준 경우는 –f 옵션으로 파일 이름을 지정한다.  
+여러 파일들 간의 의존성과 각 파일을 위한 명령어를 정의한 Makefile을 해석하여 프로젝트를 빌드한다.  
+
+Target: Dependencies  
+	Commands  
+Target – Command를 실행한 결과로 만들어 질 목적 파일 (object 및 실행 파일이 오며, all, clean과 같은 레이블이 올 수 있음)  
+
+
+
+
+</div>
+</details>
 .
 
 .
@@ -64,7 +157,9 @@ DVR은 Digital Video Recoder의 약자로 카메라에 잡히는 영상을 비�
 
  출처: [나무위키-메타인지](https://namu.wiki/w/%EB%A9%94%ED%83%80%EC%9D%B8%EC%A7%80)
 
- # Assertion
+
+ 
+# Assertion
 
  찾아보기
 
@@ -94,3 +189,11 @@ C++ 11 이후에 자동 형변환이 된다고 한다.
 [H.264 stream 분석](http://egloos.zum.com/yajino/v/782492)
 
 [기본 스트림](http://www.ktword.co.kr/abbr_view.php?m_temp1=3500)
+
+
+# chmod 
+
+이건 gst는 아닌데,  
+그냥 한번 linux 관련해서 정리할 예정
+
+[chmod 권한설정](https://conory.com/blog/19194)
