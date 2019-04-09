@@ -73,8 +73,8 @@ TBA는 외부 문제가 들어갈 자리이다.
 | 2019-04-05 | (30) 빅데이터 분석 프로그램 구현 <br> [트리의 지름](https://www.acmicpc.net/problem/1967) |<br> 트리순회 |
 | 2019-04-06 | (20) 공기청정기 테스트 <br> (20) 전등 자가진단 로직 테스트 <br> [Z](https://www.acmicpc.net/problem/1074) | <br> <br> 분할 정복 |
 | 2019-04-07 | <span style="color:#FA5858"><b>보충</b></span> ||
-| 2019-04-08 | (30) 에어컨 온습도 제어프로그램 <br> TBA ||
-| 2019-04-09 | (10) 통신버퍼 설계 <br> (10) 정수기 성능 측정 <br> TBA ||
+| 2019-04-08 | (10) 에어컨 온습도 제어프로그램 <br> [욕심쟁이 판다](https://www.acmicpc.net/problem/1937) or [Dance Dance Revolution](https://www.acmicpc.net/problem/2342) |<br> DP |<br>v/|
+| 2019-04-09 | (10) 통신버퍼 설계 <br> (10) 정수기 성능 측정 <br> [회의실배정](https://www.acmicpc.net/problem/1931) or [댄스파티](https://www.acmicpc.net/problem/2831) |<br><br> 그리디알고리즘 |
 | 2019-04-10 | (30) 문화재 보존 시스템 면적계산 프로그램 구현 <br> TBA ||
 | 2019-04-1 | (30)서비스 센터 업무 시뮬레이션 <br>  TBA ||
 | 2019-04-12 | (10) 로봇 청소기의 배터리 성능 최적화 <br> (10) 미세먼지 측정 시스템 개발 <br> TBA ||

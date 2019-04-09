@@ -24,7 +24,7 @@ Media spec 문서를 보다가
 압축파일을 풀면 bookkmakr_page.js 파일이 나오는데  
 이파일을  
 C:\Program Files\Adobe\Reader 10.0\Reader\Javascripts 폴더에 옮겨놓고 Adobe Reader 프로그램을 재실행 시킨다.  
-(나는 실제로 Program Files(x86)에 있었다.)
+(필자는 실제로 Program Files(x86)에 있었다.)
 
 그 다음, 상단 메뉴- 보기 부분을 보면 아래쪽에 북마크와 관련된 메뉴가 보인다.  
 ![bookmark1](https://bleetoteelb.github.io/assets/img/bookmark1.JPG)  
@@ -44,3 +44,4 @@ C:\Program Files\Adobe\Reader 10.0\Reader\Javascripts 폴더에 옮겨놓고 Ado
 [이곳](http://www.pdfhacks.com/)에 가면 PDF와 관련된 다른 프로그램들이 있는 것 같다.  
 구경해보고 필요한 것은 갖다 쓰자.  
 
+출처 : https://ttend.tistory.com/133
