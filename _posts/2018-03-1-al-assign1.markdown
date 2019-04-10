@@ -3,7 +3,7 @@ layout: post
 title:  "Find words"
 subtitle:   "Find words"
 categories: devlog
-tags: oop
+tags: al
 ---
 
 # 1. 문제 

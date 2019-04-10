@@ -21,7 +21,8 @@ tags: gst
 make 파일 문법을 잘 정리되어 있는 것 같아서 북마크.
 나중에 제대로 정리해서 make 관련 되어서도 정리해볼까 생각중
 
-[make파일 링크](https://wiki.kldp.org/KoreanDoc/html/gcc_and_make/gcc_and_make-3.html)
+[make파일 링크](https://wiki.kldp.org/KoreanDoc/html/gcc_and_make/gcc_and_make-3.html)  
+[또다른 make파일 링크](https://bowbowbow.tistory.com/12?category=176521)
 
 <details>
 <summary>리눅스 강의 내용</summary>
@@ -197,3 +198,14 @@ C++ 11 이후에 자동 형변환이 된다고 한다.
 그냥 한번 linux 관련해서 정리할 예정
 
 [chmod 권한설정](https://conory.com/blog/19194)
+
+
+# ctags
+
+ctag란 프로그래밍 소스코드의 태그(전역변수 선언, 함수 정의, 매크로 선언)들의  database를 생성하는 Unix 명령어  
+
+각 태그들의 인덱스를 만들어 편하게 찾을 수 있도록 만드는 유틸리티  
+
+나중에 한번 깔끔하게 정리해야지.  
+좋은 기능이군.  
+[ctags](https://bowbowbow.tistory.com/15?category=176521)

@@ -3,7 +3,7 @@ layout: post
 title:  "Follow instruction"
 subtitle:   "Follow instruction"
 categories: devlog
-tags: oop
+tags: al
 ---
 
 

@@ -3,7 +3,7 @@ layout: post
 title:  "Find words-2"
 subtitle:   "Find words-2"
 categories: devlog
-tags: oop
+tags: al
 ---
 
 # 모두 탐색하기 

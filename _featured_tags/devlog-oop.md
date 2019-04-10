@@ -1,8 +1,8 @@
 ---
 layout: tag-blog
-title: OOP
-slug: oop
+title: Language Syntax
+slug: ls
 category: devlog
 menu: false
-order: 6
+order: 4
 ---
