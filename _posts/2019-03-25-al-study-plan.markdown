@@ -71,21 +71,21 @@ TBA는 외부 문제가 들어갈 자리이다.
 | 2019-04-03 | (30) 신도시 <br> [징검다리](https://programmers.co.kr/learn/courses/30/lessons/43236) |<br> 이분탐색|
 | 2019-04-04 | (10) 라이브러리 함수의 오류처리 <br> (10) TV 모델 인기도 조사 <br> [K번째수](https://www.acmicpc.net/problem/11004) | <br> <br> 정렬 |
 | 2019-04-05 | (30) 빅데이터 분석 프로그램 구현 <br> [트리의 지름](https://www.acmicpc.net/problem/1967) |<br> 트리순회 |
-| 2019-04-06 | (20) 공기청정기 테스트 <br> (20) 전등 자가진단 로직 테스트 <br> [Z](https://www.acmicpc.net/problem/1074) | <br> <br> 분할 정복 |
+| 2019-04-06 | (20) 공기청정기 테스트 <br> (20) 전등 자가진단 로직 테스트 <br> [Z](https://www.acmicpc.net/problem/1074) | <br> <br> 분할 정복 |v<br>v<br>-|
 | 2019-04-07 | <span style="color:#FA5858"><b>보충</b></span> ||
 | 2019-04-08 | (10) 에어컨 온습도 제어프로그램 <br> [욕심쟁이 판다](https://www.acmicpc.net/problem/1937) or [Dance Dance Revolution](https://www.acmicpc.net/problem/2342) |<br> DP |<br>v/|
 | 2019-04-09 | (10) 통신버퍼 설계 <br> (10) 정수기 성능 측정 <br> [회의실배정](https://www.acmicpc.net/problem/1931) or [댄스파티](https://www.acmicpc.net/problem/2831) |<br><br> 그리디알고리즘 |
 | 2019-04-10 | (30) 문화재 보존 시스템 면적계산 프로그램 구현 ||
 | 2019-04-1 | (30)서비스 센터 업무 시뮬레이션 <br>   ||
 | 2019-04-12 | (10) 로봇 청소기의 배터리 성능 최적화 <br> (10) 미세먼지 측정 시스템 개발 <br> [연구소3](https://www.acmicpc.net/problem/17142) |<br><br>BFS|<br><br>v|
-| 2019-04-13 | (10) 단어 트리 <br> (20) 로봇 청소기 주행 알고리즘 테스트 <br> (20) 전기차 주행제어 로직테스트 |||
+| 2019-04-13 | (10) 단어 트리 <br> (20) 로봇 청소기 주행 알고리즘 테스트 <br> (20) 전기차 주행제어 로직테스트 ||<br>v<br>v|
 | 2019-04-14 | (30) 자율주행 알고리즘 개발  <br> [가장 큰 증가 부분수열](https://www.acmicpc.net/problem/11055)|<br>DP|<br>v|
 | 2019-04-15 | <span style="color:#FA5858"><b>보충</b></span> ||
 | 2019-04-16 | (30) 용의자 검색  <br> [가장 긴 증가하는 부분수열](https://www.acmicpc.net/problem/11053) |<br>DP|<br>v|
 | 2019-04-17 | (30) 트리 높이 구하기 ||v|
 | 2019-04-18 | (10) 가까운 주유소 <br> (10) 중위표기식 계산기 개발||v<br>v|
 | 2019-04-19 | (30) 산책 ||v|
-| 2019-04-20 | (20) SmartFactory를 위한 드릴머신 함수 테스트 <br> (20) 온도제어기 단위 테스트 ||
+| 2019-04-20 | (20) SmartFactory를 위한 드릴머신 함수 테스트 <br> (20) 온도제어기 단위 테스트 ||v<br>v|
 | 2019-04-21 | <span style="color:#FA5858"><b>보충</b></span> ||
 | 2019-04-22 | (30) 도로 건설 <br> (30) 건물옥상정원 ||v<br> v|
 | 2019-04-23 | (30) 연구원 건강증진 프로젝트 <br> (10) 자율주행차량 현장실험비용 계산 프로그램 개발 ||v<br>v|
