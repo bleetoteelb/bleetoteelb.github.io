@@ -45,3 +45,19 @@ C:\Program Files\Adobe\Reader 10.0\Reader\Javascripts 폴더에 옮겨놓고 Ado
 구경해보고 필요한 것은 갖다 쓰자.  
 
 출처 : https://ttend.tistory.com/133
+
+.  
+
+.  
+
+.  
+
+__190505 추가__  
+결국 무거운 어도비를 버리고자 별pdf를 시도했지만,  
+별pdf는 기업에서는 유료라서 사용을 못하고
+
+sumatra pdf 를 사용하고 있다.  
+
+
+약간의 문제는 있지만 일단 가볍고,  
+껐다 켜도 이전에 열어 놓은 pdf를 저장했다가 다시 열어줘서 편하다.

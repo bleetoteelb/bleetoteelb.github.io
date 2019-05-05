@@ -103,3 +103,8 @@ TBA는 외부 문제가 들어갈 자리이다.
 
 필자의 코드를 볼 수 있는 곳  
 [https://github.com/bleetoteelb/lg_sw_test](https://github.com/bleetoteelb/lg_sw_test)
+
+.
+
+2019.05.02 종료.  
+gmj-study로 넘어갑니다.
