@@ -26,17 +26,11 @@ tags: gst
  &nbsp; 다음은 Gstreamer가 제공하는 기능들입니다.
 
 - an API for multimedia applications
-
 - a plugin architecture
-
 - a pipeline architecture
-
 - a mechanism for media type handling/negotiation
-
 - a mechanism for synchronization
-
 - over 250 plug-ins providing more than 1000 elements
-
 - a set of tools
 
 <br>
@@ -44,15 +38,10 @@ tags: gst
 Gstreamer의 플러그인들은 다음과 같이 분류될 수 있습니다.
 
 - protocols handling
-
 - sources: for audio and video (involves protocol plugins)
-
 - formats: parsers, formaters, muxers, demuxers, metadata, subtitles
-
 - codecs: coders and decoders
-
 - filters: converters, mixers, effects, ...
-
 - sinks: for audio and video (involves protocol plugins)
 
 ![gstreamer-overview](https://bleetoteelb.github.io/assets/img/gstreamer-overview.png)  
@@ -62,16 +51,10 @@ Gstreamer의 플러그인들은 다음과 같이 분류될 수 있습니다.
 &nbsp; Gstreamer는 다음과 같이 묶여 있습니다.
 
 - gstreamer: the core package
-
 - gst-plugins-base: an essential exemplary set of elements
-
 - gst-plugins-good: a set of good-quality plug-ins under LGPL
-
 - gst-plugins-ugly: a set of good-quality plug-ins that might pose distribution problems
-
 - gst-plugins-bad: a set of plug-ins that need more quality
-
 - gst-libav: a set of plug-ins that wrap libav for decoding and encoding
-
 - a few others packages
 

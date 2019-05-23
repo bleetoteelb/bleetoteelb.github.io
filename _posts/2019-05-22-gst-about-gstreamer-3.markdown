@@ -49,76 +49,8 @@ tags: gst
 
 - __*Events*__ 는 element들 사이에서 혹은 application에서 element로 전달되는 객체입니다. event들은 upstream에서 downstream으로 전달될 수 있습니다. downstream event들은 데이터 흐름과 동기화 될 수 있습니다.
 
-- __*messages*__ 는 파이프라인의 message bus에 있는 element들에 의해 기록되는 객체입니다. message들은 application에서 수집하기 위해 저장됩니다. message들은 message를 기록하는 element의 스트리밍 스레드로부터 동기적으로 중간에 붙들릴 수 있지만, message들은 보통 application의 메인 스레드에 의해 비동기적으로 처리됩니다. message들은 에러, 태그, 상태변화, 버퍼링상태, redirect 같은 정보들을 element로부터 application으로 thread-safe 방식으로 전송하는데에 사용됩니다.. 
+- __*Messages*__ 는 파이프라인의 message bus에 있는 element들에 의해 기록되는 객체입니다. message들은 application에서 수집하기 위해 저장됩니다. message들은 message를 기록하는 element의 스트리밍 스레드로부터 동기적으로 중간에 붙들릴 수 있지만, message들은 보통 application의 메인 스레드에 의해 비동기적으로 처리됩니다. message들은 에러, 태그, 상태변화, 버퍼링상태, redirect 같은 정보들을 element로부터 application으로 thread-safe 방식으로 전송하는데에 사용됩니다.. 
 
-- __*queries*__ 는 application들이 파이프라인으로부터 현재 재생 지점이나 지속시간과 같은 정보를 요청할 수 있도록 해줍니다. query들은 항상 동기적으로 응답합니다. element들은 그들과 같은 계층의 element들( 가령, 파일크기 혹은 지속시간 )로부터 정보를 요청할 수 있습니다. query들은 파이프라인 내에서 두 가지 방법으로 사용될 수 있지만, upstream에서의 query가 더 일반적입니다.
+- __*Queries*__ 는 application들이 파이프라인으로부터 현재 재생 지점이나 지속시간과 같은 정보를 요청할 수 있도록 해줍니다. query들은 항상 동기적으로 응답합니다. element들은 그들과 같은 계층의 element들( 가령, 파일크기 혹은 지속시간 )로부터 정보를 요청할 수 있습니다. query들은 파이프라인 내에서 두 가지 방법으로 사용될 수 있지만, upstream에서의 query가 더 일반적입니다.
 
 ![communication](https://bleetoteelb.github.io/assets/img/communication.png)
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-k
