@@ -143,8 +143,10 @@ g_signal_connect (bus, "message::eos", G_CALLBACK (cb_message_eos), NULL);
 
 - __State-changes__ : 이 메세지는 상태변경에 성공했을 때 발생합니다. <span class="fill_color">gst_message_parse_state_changed()</span>를 사용하여 이전상태와 새로운 상태를 분석할 수 있습니다.
 
-- __Buffering__ : 이 메세지는 네트워크 스트림을 임시저장하는 동안 발생합니다. 
+- __Buffering__ : 이 메세지는 네트워크 스트림을 임시저장하는 동안 발생합니다. <span class="fill_color">gst_message_get_structure()</span>함수가 반환한 구조체에서 "buffer-percent" 속성을 추출한 메세지로부터 백분율 단위의 진행상태를 수동으로 표시할 수 있습니다. 버퍼링에 관련한 자세한 내용은 [Buffering](https://gstreamer.freedesktop.org/documentation/application-development/advanced/buffering.html?gi-language=c) 문서를 참조하십시오.
 
-- __element messages__ :
+- __element messages__ : 이 메세지들은 특정 element에 특별하고 보통은 추가 기능을 나타내는 특수한 메세지입니다. element의 설명 문서에서는 특정 element가 보낼 수 있는 element 메세지를 상세히 써 두어야 합니다. 예를들어, 'qtdemux' QuickTime demuxer element는 스트림에서 redirect 명령을 포함하고 있을 때 'redirect' element 메세지를 보낼 수 있습니다.
 
-- __Application-specific messages__ :
+- __Application-specific messages__ : 메세지 구조를 얻고 그 구조를 읽음으로써 추출할 수 있는 해당 정보들을 담고 있는 메세지 입니다. 일반적으로 이 메세지는 무시해도 됩니다.
+
+application 메세지들은 주로 application이 어떤 스레드로부터 메인스레드로 정보를 모아야 하는 경우에 내부에서 사용하기 위해 만들어졌습니다. 이는 스트리밍 스레드의 컨텍스트에서 이러한 시그널들이 발생하기 때문에 application이 element signal을 사용할 때 특히 유용합니다. 
