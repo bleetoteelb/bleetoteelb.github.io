@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Building an Application(5)"
+title:  "Building an Application - Pads and capabilities"
 subtitle:   "Pads and capabilities"
 categories: devlog
 tags: gst

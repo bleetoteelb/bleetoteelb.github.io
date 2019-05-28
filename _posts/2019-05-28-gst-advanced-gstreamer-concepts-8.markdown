@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Advanced GStreamer concepts(8)"
+title:  "Advanced GStreamer concepts - Autoplugging"
 subtitle:   "Autoplugging"
 categories: devlog
 tags: gst

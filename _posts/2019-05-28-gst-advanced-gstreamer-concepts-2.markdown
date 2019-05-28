@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Advanced GStreamer concepts(2)"
+title:  "Advanced GStreamer concepts - Metadata"
 subtitle:   "Metadata"
 categories: devlog
 tags: gst

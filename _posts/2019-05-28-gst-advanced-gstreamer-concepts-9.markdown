@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Advanced GStreamer concepts(9)"
+title:  "Advanced GStreamer concepts - Pipeline manipulation"
 subtitle:   "Pipeline manipulation"
 categories: devlog
 tags: gst

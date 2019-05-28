@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Advanced GStreamer concepts(5)"
+title:  "Advanced GStreamer concepts - Buffering"
 subtitle:   "Buffering"
 categories: devlog
 tags: gst
@@ -21,4 +21,4 @@ tags: gst
 
 - 네트워크 파일을 로컬 디스크에 저장하여 다운로드된 데이터에서 빠르게 탐색하도록 합니다. 이는 quicktime/youtube player와 비슷합니다. 아래의 __Download buffering__ 부분을 참조하십시오.
 
-- 
+- 캐시 영역에서 찾는 ringbuffer

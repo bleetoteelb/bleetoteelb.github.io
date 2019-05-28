@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Advanced GStreamer concepts(3)"
+title:  "Advanced GStreamer concepts - Interfaces"
 subtitle:   "Interfaces"
 categories: devlog
 tags: gst

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Advanced GStreamer concepts(6)"
+title:  "Advanced GStreamer concepts - Dynamic Controllable Parameters"
 subtitle:   "Dynamic Controllable Parameters"
 categories: devlog
 tags: gst

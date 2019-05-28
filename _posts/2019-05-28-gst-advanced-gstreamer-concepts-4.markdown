@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Advanced GStreamer concepts(4)"
+title:  "Advanced GStreamer concepts - Clocks and synchronization in Gstreamer"
 subtitle:   "Clocks and synchronization in GStreamer"
 categories: devlog
 tags: gst

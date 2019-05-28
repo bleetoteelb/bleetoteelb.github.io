@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Building an Application(7)"
+title:  "Building an Application - Your first application"
 subtitle:   "Your first application"
 categories: devlog
 tags: gst

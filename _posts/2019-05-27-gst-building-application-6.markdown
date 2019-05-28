@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Building an Application(6)"
+title:  "Building an Application - Buffers and Events"
 subtitle:   "Buffers and Events"
 categories: devlog
 tags: gst

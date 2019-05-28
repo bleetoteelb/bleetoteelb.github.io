@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Building an Application(4)"
+title:  "Building an Application - Bus"
 subtitle:   "Bus"
 categories: devlog
 tags: gst

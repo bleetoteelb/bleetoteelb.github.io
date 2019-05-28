@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Building an Application(1)"
+title:  "Building an Application - Initializing Gstreamer"
 subtitle:   "Initializaing Gstreamer"
 categories: devlog
 tags: gst

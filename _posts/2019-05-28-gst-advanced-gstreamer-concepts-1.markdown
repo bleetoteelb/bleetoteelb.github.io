@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Advanced GStreamer concepts(1)"
+title:  "Advanced GStreamer concepts - Position tracking and seeking"
 subtitle:   "Position tracking and seeking"
 categories: devlog
 tags: gst
