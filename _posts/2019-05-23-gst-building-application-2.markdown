@@ -156,7 +156,7 @@ main (int   argc,
 }
 ```
 
-&nbsp; 대부분의 플러그인들은 element를 설정하기 위한 설정에 대한 정보들을 더 제공하기 위해 추가적인 속성들을 제공합니다. __gst-inspect__은 특정 element의 속성을 요청하는 데 유용한 도구이며, 속성의 역할과 그 인자타입 및 범위에 대한 간략한 설명을 제공하기 위한 적절한 introspection을 사용합니다. __gst-inspect__ 에 대한 자세한 내용은 appendix의 [gst-inspect](https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html?gi-language=c#gst-inspect) 문서를 참고하십시오.
+&nbsp; 대부분의 플러그인들은 element를 설정하기 위한 설정에 대한 정보들을 더 제공하기 위해 추가적인 속성들을 제공합니다. __gst-inspect__ 은 특정 element의 속성을 요청하는 데 유용한 도구이며, 속성의 역할과 그 인자타입 및 범위에 대한 간략한 설명을 제공하기 위한 적절한 introspection을 사용합니다. __gst-inspect__ 에 대한 자세한 내용은 appendix의 [gst-inspect](https://gstreamer.freedesktop.org/documentation/application-development/appendix/checklist-element.html?gi-language=c#gst-inspect) 문서를 참고하십시오.
 
 &nbsp; GObject 속성들에 관한 자세한 내용들은 [GObject manual](https://developer.gnome.org/gobject/stable/rn01.html)와 [The Glib Object system](https://developer.gnome.org/gobject/stable/pt01.html)문서를 참고하길 권장합니다.
 
@@ -210,7 +210,7 @@ main (int   argc,
 
 ## __5. Linking elements__
 
-&nbsp; source element와 0개 혹은 그 이상의 filter-like elements와, 마지막에넌 sink element와 링크함으로써, 미디어 파이프라인을 구성할 수 있습니다. 이 때, 데이터는 element를 통해 흐르게 되는데, 이 것은 Gstreamer에서 미디어 처리의 기본 개념입니다.
+&nbsp; source element와 0개 혹은 그 이상의 filter-like elements와, 마지막에는 sink element와 링크함으로써, 미디어 파이프라인을 구성할 수 있습니다. 이 때, 데이터는 element를 통해 흐르게 되는데, 이 것은 Gstreamer에서 미디어 처리의 기본 개념입니다.
 
 ![linked-elements.png](https://bleetoteelb.github.io/assets/img/linked-elements.png)
 
