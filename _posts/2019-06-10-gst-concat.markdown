@@ -6,18 +6,16 @@ categories: devlog
 tags: gst
 ---
 
-[TOP](README.md)
-
 <style>
 .fill_color {background-color:rgba(164,164,164,0.7);border-radius:4px;padding:2px;}
 .blue_l {color:#323C73;}
 </style>
 
 
-# Introduction
+# __Introduction__
  본 문서에서는 concat 엘리먼트의 테스트코드 및 예제 프로그램을 사용하여 동작성을 확인해 볼 수 있도록 한다. concat 엘리먼트의 실제 코드도 분석하며 추후에 Playbin 구동시에 이해를 돕고자한다.
 
-## 1) Reference
+## __1) Reference__
 * * *
 * [concat](https://gstreamer.freedesktop.org/data/doc/gstreamer/head/gstreamer-plugins/html/gstreamer-plugins-concat.html)
 * [gstconcat.h](https://gitlab.freedesktop.org/gstreamer/gstreamer/blob/master/plugins/elements/gstconcat.h)
@@ -25,17 +23,16 @@ tags: gst
 * [Unit Test Code](https://gitlab.freedesktop.org/gstreamer/gstreamer/blob/master/tests/check/elements/concat.c)
 
   
-## 2) Concat 코드 분석
+## __2) Concat 코드 분석__
 * * *
 __GOAL__ : Unit Test Code 를 실행 및 분석하면서 gstconcat.c(.h) 파일의 코드를 같이 분석하여 Pad(capability) 및 생성, event/chain/query function, change state function 등에 학습할 수 있도록 한다.
 
 
-### 2-1) Concat plugin 소개
+### __2-1) Concat plugin 소개__
 
 &nbsp; Concat plugin은 스트림들을 하나의 연속 스트림으로 연결하는 plugin이다. concat element에 들어오는 stream 중, 처리중인 stream을 제외한 다른 모든 stream들은 이전 pad의 처리가 끝날 때까지(EOS를 받을 때까지) 기다린다. GST_FORMAT_TIME segment와 GST_FORMAT_BYTES segment들의 연속성을 유지하도록 배치한다.
 
 ```c
-
  ...
 
 GObject
@@ -77,7 +74,7 @@ Element Properties:
                         Object of type "GstObject"
 ```
 
-### &nbsp;&nbsp;&nbsp;&nbsp; __설명__
+### &nbsp;&nbsp; __설명__
 - _GObject_ - _GstElement_ - _GstConcat_ 순으로 상속되는 element이다.
 - _source pad_ 는 element를 생성할때 자동으로 생성하며, 오로지 한개만 존재한다.
 - _sink pad_ 는 (요청될 때) 여러개 만들어질 수 있다.
@@ -91,36 +88,39 @@ Element Properties:
 &nbsp; 
 
 
-<center><img src="https://bleetoteelb.github.io/assets/img/dotgraph_concat1.png" width="700"></center>
-<center><img src="https://bleetoteelb.github.io/assets/img/dotgraph_concat2.png" width="700"></center>
+<center>Test concat<img src="dotgraph_concat1.png" width="700"></center>
 
 
 
-### 2-2) 함수 소개
+<center>실제 재생<img src="dotgraph_concat2.png" width="700"></center>
+
+
+
+### __2-2) 함수 소개__
 
 함수들...
-- gst_concat_dispose ( ... )
-- gst_concat_finalize ( ... )
-- gst_concat_get_property ( ... )
-- gst_concat_set_property ( ... )
-- gst_concat_change_state ( ... )
-- gst_concat_request_new_pad ( ... )
-- gst_concat_release_pad ( ... )
-- gst_concat_sink_chain ( ... )
-- gst_concat_sink_event ( ... )
-- gst_concat_sink_query ( ... )
-- gst_concat_src_event ( ... )
-- gst_concat_src_query ( ... )
-- gst_concat_switch_pad ( ... )
-- gst_concat_notify_active_pad ( ... )
-- gst_concat_class_init ( ... )
-- gst_concat_pad_wait ( ... )
-- reset_pad ( ... )
-- unblock_pad ( ... )
+- _gst_concat_dispose ( ... )_
+- _gst_concat_finalize ( ... )_
+- _gst_concat_get_property ( ... )_
+- _gst_concat_set_property ( ... )_
+- _gst_concat_change_state ( ... )_
+- _gst_concat_request_new_pad ( ... )_
+- _gst_concat_release_pad ( ... )_
+- _gst_concat_sink_chain ( ... )_
+- _gst_concat_sink_event ( ... )_
+- _gst_concat_sink_query ( ... )_
+- _gst_concat_src_event ( ... )_
+- _gst_concat_src_query ( ... )_
+- _gst_concat_switch_pad ( ... )_
+- _gst_concat_notify_active_pad ( ... )_
+- _gst_concat_class_init ( ... )_
+- _gst_concat_pad_wait ( ... )_
+- _reset_pad ( ... )_
+- _unblock_pad ( ... )_
 
 <br>
 
-#### 2-2-1) gst_concat_change_state  
+#### __2-2-1) gst_concat_change_state__ 
 &nbsp; Param : <span class="fill_color">GstElement * element</span>, <span class="fill_color">GstStateChange transition</span>
 
 &nbsp; 인자로 받은 transition의 요청대로 상태를 변경한다. 이 상태변화는 parent_element에도 전파된다.
@@ -130,7 +130,7 @@ Element Properties:
 
 <br>
 
-#### 2-2-2) gst_concat_request_new_pad
+#### __2-2-2) gst_concat_request_new_pad__
 
 &nbsp; Param : <span class="fill_color">GstElement * element</span>, <span class="fill_color">GstPadTemplate * templ</span>, <span class="fill_color">const gchar * name</span>, <span class="fill_color">const GstCaps * caps</span>
 
@@ -140,14 +140,14 @@ Element Properties:
 
 <br>
 
-#### 2-2-3) gst_concat_release_pad
+#### __2-2-3) gst_concat_release_pad__
 &nbsp; Param : <span class="fill_color">GstElement * element</span>, <span class="fill_color">GstPad * pad</span>
 
 &nbsp; 해당 pad에서 할 일이 끝났을 경우, pad를 element로부터 제거하는 역할을 한다. flushing을 TRUE로 바꾸고 (원래는 flush가 될 때 true), pad를 비활성화시키며, 만약 다음 pad가 없고 EOS 상태이면 EOS event를 push하는 동작까지 담당한다.  
 
 <br>
 
-#### 2-2-4) gst_concat_sink_chain
+#### __2-2-4) gst_concat_sink_chain__
 &nbsp; Param : <span class="fill_color">GstPad * pad</span>, <span class="fill_color">GstObject * parent</span>, <span class="fill_color">GstBuffer * buffer</span>  
 
 &nbsp; sink에서의 처리가 끝나면, sink의 parent element (여기서는 concat)의 source pad에 연결된 chain pad로 buffer를 전달한다. 
@@ -155,7 +155,7 @@ Element Properties:
 <br>
 
 &nbsp; 
-#### 2-2-5) gst_concat_switch_pad 
+#### __2-2-5) gst_concat_switch_pad__ 
 &nbsp; Param : <span class="fill_color">GstConcat * self</span>  
 
 &nbsp; pad간의 sync를 맞춘 뒤 (stop, start 등의 위치를 이용하여) element내 다음 sink pad가 있는지를 반환한다. 다음 sinkpad가 있으면 1 , 없으면 0을 반환한다.
@@ -169,7 +169,7 @@ Element Properties:
 
 <br>
 
-#### 2-2-6) gst_concat_sink_event 
+#### __2-2-6) gst_concat_sink_event__ 
 &nbsp; Param : <span class="fill_color">GstPad * pad</span>, <span class="fill_color">GstObject * parent</span>, <span class="fill_color">GstEvent * event</span>
 
 &nbsp; 인자로 받은 event의 type에 따라서 각각 다른 event를 처리하고 결과를 boolean으로 반환한다.
@@ -182,14 +182,14 @@ Element Properties:
 
 <br>
 
-#### 2-2-7) gst_concat_sink_query 
+#### __2-2-7) gst_concat_sink_query__ 
 &nbsp; Param : <span class="fill_color">GstPad * pad</span>, <span class="fill_color">GstObject * parent</span>, <span class="fill_color">GstQuery * query</span>
 
 &nbsp; query를 받았을 경우, flushing상황이면 FALSE를 반환, 아니라면 이전 작업을 기다린 후 query_default를 호출한다.
 
 <br>
 
-#### 2-2-8) gst_concat_src_event 
+#### __2-2-8) gst_concat_src_event__ 
 Param : <span class="fill_color">GstPad * pad</span>, <span class="fill_color">GstObject * parent</span>, <span class="fill_color">GstEvent * event</span>
 
 &nbsp; 인자로 받은 event의 type에 따라서 각각 다른 event를 처리하고 결과를 boolean으로 반환한다.
@@ -200,7 +200,7 @@ Param : <span class="fill_color">GstPad * pad</span>, <span class="fill_color">G
 
 <br>
 
-#### 2-2-9) gst_concat_src_query 
+#### __2-2-9) gst_concat_src_query__ 
 &nbsp; Param : <span class="fill_color">GstPad * pad</span>, <span class="fill_color">GstObject * parent</span>, <span class="fill_color">GstQuery * query</span>
 
 &nbsp; query를 받았을 경우, query_default를 호출한다.
@@ -208,7 +208,7 @@ Param : <span class="fill_color">GstPad * pad</span>, <span class="fill_color">G
 <br>
 
 
-#### 2-2-10) gst_concat_pad_wait
+#### __2-2-10) gst_concat_pad_wait__
 &nbsp; Param : <span class="fill_color">GstConcatPad * spad</span>, <span class="fill_color">GstConcat * self</span>
 
 &nbsp; 함수를 호출한 Thread의 Pad가 현재 처리중인 pad인지를 확인한다. 다른 Pad의 작업이 끝나고 해당 pad의 차례가 될 때까지 기다리다가 TRUE를 반환한다.  Pad가 flushing 상태이면, 별도의 과정없이 바로 FALSE를 반환한다. 
@@ -236,7 +236,7 @@ Param : <span class="fill_color">GstPad * pad</span>, <span class="fill_color">G
 <br>
 
 
-## 3) Unit Test Code
+## __3) Unit Test Code__
 * * *
 __GOAL__ :  concat 엘리먼트의 유닛 테스트 코드를 실행시켜 보고 (e.g make elements/concat.check) concat의 동작성을 확인 및 분석해 본다.
 
@@ -316,7 +316,7 @@ GST_END_TEST;
 
 <br>
 
-### 3-1) Concat element 생성
+### __3-1) Concat element 생성__
 
 ```c
   concat = gst_element_factory_make ("concat", NULL);
@@ -326,7 +326,7 @@ GST_END_TEST;
 
 <div style="width:800px;height:220px;">
   <div style="width:300px;float:left;margin-right:30px;margin-left:30px">
-    <img src="https://bleetoteelb.github.io/assets/img/concat_element1.png">
+    <img src="concat_element1.png">
   </div>
     
   <div style="width:440px;float:right;"> 
@@ -363,7 +363,7 @@ GST_END_TEST;
 
 <div style="width:800px;height:220px;">
   <div style="width:300px;float:left;margin-right:30px;margin-left:30px">
-    <img src="https://bleetoteelb.github.io/assets/img/concat_element2.png">
+    <img src="concat_element2.png">
   </div>
     
   <div style="width:440px;float:right;"> 
@@ -383,7 +383,7 @@ GST_END_TEST;
 
 <br>
 
-### 3-2) Fake source pad생성
+### __3-2) Fake source pad생성__
 
 ```c
   output_sink = gst_pad_new ("sink", GST_PAD_SINK);
@@ -392,7 +392,7 @@ GST_END_TEST;
 
 <div style="width:800px;height:220px;">
   <div style="width:400px;float:left;margin-right:30px;margin-left:30px">
-    <img src="https://bleetoteelb.github.io/assets/img/concat_element3.png">
+    <img src="concat_element3.png">
   </div>
     
   <div style="width:340px;float:right;"> 
@@ -416,7 +416,7 @@ fail_unless (gst_pad_link (src, output_sink) == GST_PAD_LINK_OK);
 ```
 <div style="width:800px;height:220px;">
   <div style="width:400px;float:left;margin-right:30px;margin-left:30px">
-    <img src="https://bleetoteelb.github.io/assets/img/concat_element4.png">
+    <img src="concat_element4.png">
   </div>
     
   <div style="width:340px;float:right;"> 
@@ -434,7 +434,7 @@ fail_unless (gst_pad_link (src, output_sink) == GST_PAD_LINK_OK);
 
 <br>
 
-### 3-3) 각 Sink pad별 Thread 생성
+### __3-3) 각 Sink pad별 Thread 생성__
 
 ```c
   thread1 = g_thread_new ("thread1", (GThreadFunc) push_buffers_time, sink1);
@@ -445,7 +445,7 @@ fail_unless (gst_pad_link (src, output_sink) == GST_PAD_LINK_OK);
 
 <div style="width:800px;height:300px;">
   <div style="width:500px;float:left;margin-right:30px;margin-left:30px">
-    <img src="https://bleetoteelb.github.io/assets/img/concat_element5.png">
+    <img src="concat_element5.png">
   </div>
     
   <div style="width:240px;float:right;"> 
@@ -465,7 +465,7 @@ fail_unless (gst_pad_link (src, output_sink) == GST_PAD_LINK_OK);
 
  <br>
 
-### 3-3) sink로 buffer 전달
+### __3-3) sink로 buffer 전달__
 
 ```c
   g_thread_join (thread1);
@@ -518,7 +518,7 @@ push_buffers_time (gpointer data)
 
 <br>
 
-#### 3-3-1) Segment 시작 event
+#### __3-3-1) Segment 시작 event__
 ```c
   gst_pad_send_event (pad, gst_event_new_stream_start ("test"));
   gst_segment_init (&segment, GST_FORMAT_TIME);
@@ -556,7 +556,7 @@ gst_segment_init (GstSegment * segment, GstFormat format)
 
 <br>
 
-#### 3-3-2) Buffer 전달
+#### __3-3-2) Buffer 전달__
 
 ```c
 #define N_BUFFERS 10
@@ -579,8 +579,7 @@ gst_segment_init (GstSegment * segment, GstFormat format)
 &nbsp; <span class="fill_color">gst_buffer_memset</span> 함수를 통해 _i_ 값으로 1만큼 채워줍니다.
 &nbsp; buf의 TIMESTAMP,DURATION 속성에 timestamp, duration을 넣고 <span class="fill_color">gst_pad_chain</span>함수를 호출한다. 여기서 함수 인자인 pad가 concat의 pad이므로 마찬가지로 concat의 <span class="fill_color">gst_concat_sink_chain<span>함수로 연결된다.
 
-![concat_element6](https://bleetoteelb.github.io/assets/img/concat_element6.png)
-
+![concat_element6](concat_element6.png)
 &nbsp; sink_0에 stream(buffer)가 들어가면(gst_pad_chain), 내부에서 sink_0인 concat으로 올라가서 concat의 srcpad에서 link된 sink pad로 sink_chain함수를 이용해서 buffer를 전달한다(gst_pad_push). gst_pad_push는 다시 gst_pad_push_data를 호출하고 gst_pad_push_data에서 pad의 peer pad(여기서는 output_sink pad)를 가져와서 peer pad의 chain 함수를 호출한다.
 이 때, output_sink pad의 chain함수는 처음에 등록한 output_chain_time 함수이다.
 
@@ -629,7 +628,7 @@ output_chain_time (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 
 <br>
 
-#### 3-3-3) EOS 전달
+#### __3-3-3) EOS 전달__
 
 ```c
     gst_pad_send_event (pad, gst_event_new_eos ());
@@ -652,7 +651,7 @@ output_chain_time (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 
 6. 다음 pad로 current_pad 가 바뀌고, duration이 바뀌었다는 message를 보낸다.
 
-![concat_element7](https://bleetoteelb.github.io/assets/img/concat_element7.png)
+![concat_element7](concat_element7.png)
 
 <br>
 
@@ -664,7 +663,7 @@ output_chain_time (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 7. <span class="fill_color">gst_pad_push_event_unchecked</span> & <span class="fill_color">gst_pad_send_event_unchecked</span> 로 srcpad와 event 전달
 8. pad의 peer인 output_sink의 event 함수를 호출 (<span class="fill_color">output_event_time</span>)
 
-![concat_element8](https://bleetoteelb.github.io/assets/img/concat_element8.png)
+![concat_element8](concat_element8.png)
 
 <br>
 
@@ -686,20 +685,20 @@ output_chain_time (GstPad * pad, GstObject * parent, GstBuffer * buffer)
 ```
 
 <center>~ thread1</center>
-<center><img src="https://bleetoteelb.github.io/assets/img/dotgraph_concat3.png" width="700"></center>
+<center><img src="dotgraph_concat3.png" width="700"></center>
 &nbsp; 
 <center>thread1 ~ thread2</center>
-<center><img src="https://bleetoteelb.github.io/assets/img/dotgraph_concat4.png" width="700"></center>
+<center><img src="dotgraph_concat4.png" width="700"></center>
 &nbsp;
 <center>thread2 ~ thread3</center>
-<center><img src="https://bleetoteelb.github.io/assets/img/dotgraph_concat5.png" width="700"></center>
+<center><img src="dotgraph_concat5.png" width="700"></center>
 &nbsp;
 <center>thread3 ~ </center>
-<center><img src="https://bleetoteelb.github.io/assets/img/dotgraph_concat6.png" width="700"></center>
+<center><img src="dotgraph_concat6.png" width="700"></center>
 
 
 
-## 4) Playbin3 에서 사용 예
+## __4) Playbin3 에서 사용 예__
 * * *
 __GOAL__ : Playbin3 에서 concat을 구성하여 사용하고 있다. concat 이 어느 포지션에 구성되는지 닷 그래프를 통해 확인해 보고 어떤 역할을 담당하는지 확인해 본다.
 서버에 있는 아래 파일을 gst-play 를 통해 구동시켜보고 오디오 트랙을 변경하면 concat 에서 무슨 일들이 벌어지는지 확인해 본다.
@@ -742,4 +741,4 @@ ftp://10.186.118.224/guest/salmon/multi_audio/multi_audio.mkv (user / user), (ht
 
 잘 모르겠다...
 
-![dotgraph_concat7](https://bleetoteelb.github.io/assets/img/dotgraph_concat7.png)
+![dotgraph_concat7](dotgraph_concat7.png)
